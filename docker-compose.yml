@@ -20,8 +20,8 @@ services:
       - POSTGRES_PASSWORD=iamroot
 
   stats-server:
-    build: stats-service
-    image: stats_server
+    build: stats-service/stats-server
+    image: ewm-stats-server
     ports:
       - "9090:9090"
     depends_on:
@@ -35,7 +35,7 @@ services:
 
   ewm-service:
     build: main-service
-    image: evm_service
+    image: ewm-main-service
     ports:
       - "8080:8080"
     depends_on:
