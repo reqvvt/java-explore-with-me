@@ -34,7 +34,7 @@ public class StatsController {
             final LocalDateTime endDateTime = LocalDateTime.parse(end, DT_FORMATTER);
 
             List<HitCount> result;
-            boolean isUniq = unique != null;
+            Boolean isUniq = unique != null;
 
             if (isUniq) {
                 if (uris == null) {
