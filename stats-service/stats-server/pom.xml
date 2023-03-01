@@ -5,9 +5,11 @@
         <groupId>ru.practicum</groupId>
         <version>0.0.1-SNAPSHOT</version>
     </parent>
+
     <modelVersion>4.0.0</modelVersion>
     <artifactId>stats-server</artifactId>
-    <name>stats-server</name>
+    <version>0.0.1-SNAPSHOT</version>
+
     <url>http://maven.apache.org</url>
 
     <dependencies>
