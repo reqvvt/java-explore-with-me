@@ -1,6 +1,5 @@
 package ru.practicum.evm.user;
 
-import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
