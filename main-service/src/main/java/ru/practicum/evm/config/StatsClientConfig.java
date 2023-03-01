@@ -11,7 +11,7 @@ public class StatsClientConfig {
     @Value("${stats-service.url}")
     private String url;
 
-    @Bean
+    @Bean("StatClient")
     StatsClient statsClient() {
         RestTemplateBuilder builder = new RestTemplateBuilder();
         return new StatsClient(url, builder);
