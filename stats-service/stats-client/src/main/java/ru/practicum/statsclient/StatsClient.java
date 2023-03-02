@@ -15,7 +15,6 @@ import java.util.Map;
 @Service
 public class StatsClient extends BaseClient {
     private static final String HIT_API_PREFIX = "/hit";
-    private static final String STAT_API_PREFIX = "/stats";
 
     @Autowired
     public StatsClient(@Value("http://localhost:9090") String serverUrl, RestTemplateBuilder builder) {
@@ -40,6 +39,6 @@ public class StatsClient extends BaseClient {
                 "end", end,
                 "uris", uris,
                 "unique", unique);
-        return post(STAT_API_PREFIX, parameters);
+        return get("/stats?start={start}&end={end}&uris={uris}&unique={unique}", null, parameters);
     }
 }
