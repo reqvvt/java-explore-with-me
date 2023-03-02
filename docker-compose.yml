@@ -44,7 +44,7 @@ services:
     environment:
       - SERVER_PORT=8080
       - STATS-SERVER_URL=http://stats-server:9090
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://ewm-db:5432/main_db
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres-ewm-db:5432/main_db
       - SPRING_DATASOURCE_USERNAME=postgres
       - SPRING_DATASOURCE_PASSWORD=iamroot
 
