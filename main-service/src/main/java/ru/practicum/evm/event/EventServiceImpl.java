@@ -43,7 +43,6 @@ public class EventServiceImpl implements EventService {
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     @Override
-    @Transactional
     public EventFullDto create(NewEventDto newEventDto, int userId) {
         EventValidator.validateNewEventDto(newEventDto);
         User initiator = findUser(userId);
@@ -60,7 +59,7 @@ public class EventServiceImpl implements EventService {
     @Override
     @Transactional
     public EventFullDto getPrivateById(int eventId, int userId) {
-        findUser(userId);
+        checkUserExists(userId);
         EventFullDto eventFullDto = eventMapper.toFullEventDto(findEvent(eventId));
         return setViewsToEventFullDto(eventFullDto);
     }
@@ -117,7 +116,7 @@ public class EventServiceImpl implements EventService {
     @Override
     @Transactional
     public Collection<EventShortDto> getAllUserEvents(int userId, int from, int size) {
-        findUser(userId);
+        checkUserExists(userId);
         PageRequest pageRequest = PageRequest.of(from, size);
         return eventRepository.findAllByInitiator_Id(userId, pageRequest).stream()
                               .map(eventMapper::toShortEventDto)
@@ -163,7 +162,7 @@ public class EventServiceImpl implements EventService {
     @Override
     @Transactional
     public EventFullDto updateByUser(int eventId, int userId, UpdateEventUserRequest updateEventUserRequest) {
-        findUser(userId);
+        checkUserExists(userId);
 
         Event selectedEvent = findEvent(eventId);
         EventState state = selectedEvent.getState();
@@ -260,10 +259,15 @@ public class EventServiceImpl implements EventService {
                 (String.format("Category with id = %s was not found", categoryId))));
     }
 
-    private Event updateEventCategory(Event event, int newCategoryId) {
+    private void checkUserExists(int userId) {
+        if (!userRepository.existsById(userId)) {
+            throw new NotFoundException((String.format("User with id = %s was not found", userId)));
+        }
+    }
+
+    private void updateEventCategory(Event event, int newCategoryId) {
         Category newCategory = findCategory(newCategoryId);
         event.setCategory(newCategory);
-        return event;
     }
 
     private void addHit(HttpServletRequest request) {

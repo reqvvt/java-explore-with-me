@@ -14,6 +14,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
 import java.util.Collection;
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -25,7 +26,7 @@ public class UserAdminController {
 
     @GetMapping
     public ResponseEntity<Collection<UserDto>> getUsers(
-            @RequestParam(defaultValue = "", required = false) int[] ids,
+            @RequestParam(defaultValue = "", required = false) List<Integer> ids,
             @RequestParam(defaultValue = "0", required = false) @PositiveOrZero int from,
             @RequestParam(defaultValue = "10", required = false) @Positive int size
     ) {

@@ -12,7 +12,6 @@ import ru.practicum.evm.user.UserRepository;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -26,12 +25,11 @@ public class RequestServiceImpl implements RequestService {
     private final RequestMapper requestMapper;
 
     @Override
-    @Transactional
     public ParticipationRequestDto create(int userId, int eventId) {
         User requester = findUser(userId);
         Event event = findEvent(eventId);
 
-        checkRequestExistence(userId, eventId);
+        checkRequestExists(userId, eventId);
         int confirmedRequests = event.getConfirmedRequests();
         int participantLimit = event.getParticipantLimit();
         boolean isAvailable = (participantLimit - confirmedRequests) > 0;
@@ -66,8 +64,8 @@ public class RequestServiceImpl implements RequestService {
     @Override
     @Transactional
     public Collection<ParticipationRequestDto> getRequestsForInitiator(int eventId, int userId) {
-        findUser(userId);
-        findEvent(eventId);
+        checkUserExists(userId);
+        checkEventExists(eventId);
 
         Collection<ParticipationRequest> requests = requestRepository.findAllByEvent_Id(eventId);
         return requests.stream()
@@ -78,7 +76,7 @@ public class RequestServiceImpl implements RequestService {
     @Override
     @Transactional
     public Collection<ParticipationRequestDto> getUserRequests(int userId) {
-        findUser(userId);
+        checkUserExists(userId);
         Collection<ParticipationRequest> requests = requestRepository.findAllByRequester_Id(userId);
         return requests.stream()
                        .map(requestMapper::toRequestDto)
@@ -89,7 +87,7 @@ public class RequestServiceImpl implements RequestService {
     @Transactional
     public EventRequestStatusUpdateResult updateRequestStatus(int eventId, int userId, EventRequestStatusUpdateRequest request) {
         Event event = findEvent(eventId);
-        findUser(userId);
+        checkUserExists(userId);
         List<Integer> requestIds = request.getRequestIds();
         RequestStatus selectedStatus = request.getStatus();
 
@@ -97,9 +95,6 @@ public class RequestServiceImpl implements RequestService {
         int participantLimit = event.getParticipantLimit();
         int availableParticipants = participantLimit - approvedRequests;
         int potentialParticipants = requestIds.size();
-
-        List<ParticipationRequestDto> confirmedRequests = Collections.emptyList();
-        List<ParticipationRequestDto> rejectedRequests = Collections.emptyList();
 
         if (participantLimit != 0 && availableParticipants <= 0) {
             throw new ParticipantLimitException("The participant limit = " + participantLimit + " has been reached");
@@ -110,45 +105,30 @@ public class RequestServiceImpl implements RequestService {
                                                         .map(this::checkRequestStatus)
                                                         .collect(Collectors.toList());
 
+        List<ParticipationRequestDto> confirmedRequests = requests.stream()
+                                                                  .peek(r -> r.setStatus(RequestStatus.CONFIRMED))
+                                                                  .map(requestRepository::save)
+                                                                  .map(requestMapper::toRequestDto)
+                                                                  .collect(Collectors.toList());
+
+        List<ParticipationRequestDto> rejectedRequests = requests.stream()
+                                                                 .peek(r -> r.setStatus(RequestStatus.REJECTED))
+                                                                 .map(requestRepository::save)
+                                                                 .map(requestMapper::toRequestDto)
+                                                                 .collect(Collectors.toList());
+
         if (participantLimit == 0 || !event.getRequestModeration()) {
-            confirmedRequests = requests.stream()
-                                        .peek(r -> r.setStatus(RequestStatus.CONFIRMED))
-                                        .map(requestRepository::save)
-                                        .map(requestMapper::toRequestDto)
-                                        .collect(Collectors.toList());
             return new EventRequestStatusUpdateResult(confirmedRequests, rejectedRequests);
         }
 
         if (selectedStatus.equals(RequestStatus.REJECTED)) {
-            rejectedRequests = requests.stream()
-                                       .peek(r -> r.setStatus(RequestStatus.REJECTED))
-                                       .map(requestRepository::save)
-                                       .map(requestMapper::toRequestDto)
-                                       .collect(Collectors.toList());
             return new EventRequestStatusUpdateResult(confirmedRequests, rejectedRequests);
         }
 
         if (selectedStatus.equals(RequestStatus.CONFIRMED)) {
             if (potentialParticipants <= availableParticipants) {
-                confirmedRequests = requests.stream()
-                                            .peek(r -> r.setStatus(RequestStatus.CONFIRMED))
-                                            .map(requestRepository::save)
-                                            .map(requestMapper::toRequestDto)
-                                            .collect(Collectors.toList());
                 event.setConfirmedRequests(approvedRequests + potentialParticipants);
             } else {
-                confirmedRequests = requests.stream()
-                                            .limit(availableParticipants)
-                                            .peek(r -> r.setStatus(RequestStatus.CONFIRMED))
-                                            .map(requestRepository::save)
-                                            .map(requestMapper::toRequestDto)
-                                            .collect(Collectors.toList());
-                rejectedRequests = requests.stream()
-                                           .skip(availableParticipants)
-                                           .peek(r -> r.setStatus(RequestStatus.REJECTED))
-                                           .map(requestRepository::save)
-                                           .map(requestMapper::toRequestDto)
-                                           .collect(Collectors.toList());
                 event.setConfirmedRequests(event.getParticipantLimit());
             }
             eventRepository.save(event);
@@ -186,7 +166,19 @@ public class RequestServiceImpl implements RequestService {
                 (String.format("Category with id = %s was not found", requestId))));
     }
 
-    private void checkRequestExistence(int userId, int eventId) {
+    private void checkUserExists(int userId) {
+        if (!userRepository.existsById(userId)) {
+            throw new NotFoundException((String.format("User with id = %s was not found", userId)));
+        }
+    }
+
+    private void checkEventExists(int eventId) {
+        if (!eventRepository.existsById(eventId)) {
+            throw new NotFoundException((String.format("Event with id = %s was not found", eventId)));
+        }
+    }
+
+    private void checkRequestExists(int userId, int eventId) {
         if (requestRepository.findByRequester_IdAndEvent_Id(userId, eventId).isPresent()) {
             throw new RequestIsAlreadyExistsException("The limit of participation requests has been reached");
         }

@@ -2,6 +2,7 @@ package ru.practicum.evm.user;
 
 
 import java.util.Collection;
+import java.util.List;
 
 public interface UserService {
 
@@ -9,7 +10,7 @@ public interface UserService {
 
     User get(int userId);
 
-    Collection<UserDto> getUsers(int[] userIds, int from, int size);
+    Collection<UserDto> getUsers(List<Integer> userIds, int from, int size);
 
     void delete(int userId);
 }

@@ -1,13 +1,11 @@
 package ru.practicum.evm.event;
 
 import org.mapstruct.Mapper;
-import org.mapstruct.factory.Mappers;
 
 import java.time.LocalDateTime;
 
 @Mapper(componentModel = "spring")
 public interface EventMapper {
-    EventMapper INSTANCE = Mappers.getMapper(EventMapper.class);
 
     default Event toEvent(NewEventDto newEventDto) {
         if (newEventDto == null) {
@@ -23,20 +21,19 @@ public interface EventMapper {
             requestModeration = true;
         }
 
-        Event newEvent = Event.builder()
-                              .annotation(newEventDto.getAnnotation())
-                              .confirmedRequests(0)
-                              .createdOn(LocalDateTime.now())
-                              .description(newEventDto.getDescription())
-                              .eventDate(newEventDto.getEventDate())
-                              .location(newEventDto.getLocation())
-                              .paid(paid)
-                              .participantLimit(newEventDto.getParticipantLimit())
-                              .requestModeration(requestModeration)
-                              .state(EventState.PENDING)
-                              .title(newEventDto.getTitle())
-                              .build();
-        return newEvent;
+        return Event.builder()
+                    .annotation(newEventDto.getAnnotation())
+                    .confirmedRequests(0)
+                    .createdOn(LocalDateTime.now())
+                    .description(newEventDto.getDescription())
+                    .eventDate(newEventDto.getEventDate())
+                    .location(newEventDto.getLocation())
+                    .paid(paid)
+                    .participantLimit(newEventDto.getParticipantLimit())
+                    .requestModeration(requestModeration)
+                    .state(EventState.PENDING)
+                    .title(newEventDto.getTitle())
+                    .build();
     }
 
     EventFullDto toFullEventDto(Event event);

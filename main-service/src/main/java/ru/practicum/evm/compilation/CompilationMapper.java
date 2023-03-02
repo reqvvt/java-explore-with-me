@@ -1,11 +1,9 @@
 package ru.practicum.evm.compilation;
 
 import org.mapstruct.Mapper;
-import org.mapstruct.factory.Mappers;
 
 @Mapper(componentModel = "spring")
 public interface CompilationMapper {
-    CompilationMapper INSTANCE = Mappers.getMapper(CompilationMapper.class);
 
     CompilationDto toCompilationDto(Compilation compilation);
 

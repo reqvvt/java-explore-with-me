@@ -21,7 +21,6 @@ public class CompilationServiceImpl implements CompilationService {
     private final CompilationMapper compilationMapper;
 
     @Override
-    @Transactional
     public CompilationDto create(NewCompilationDto newCompilationDto) {
         List<Integer> eventIds = newCompilationDto.getEvents();
         List<Event> events = Collections.emptyList();
@@ -81,7 +80,6 @@ public class CompilationServiceImpl implements CompilationService {
     }
 
     @Override
-    @Transactional
     public void delete(int compilationId) {
         compilationRepository.deleteById(compilationId);
     }

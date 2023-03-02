@@ -6,7 +6,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.evm.exception.NotFoundException;
 
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -19,7 +18,6 @@ public class UserServiceImpl implements UserService {
     private final UserMapper userMapper;
 
     @Override
-    @Transactional
     public UserDto create(NewUserRequest newUserRequest) {
         User newUser = userMapper.toUser(newUserRequest);
         return userMapper.toUserDto(userRepository.save(newUser));
@@ -34,25 +32,20 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public Collection<UserDto> getUsers(int[] userIds, int from, int size) {
+    public Collection<UserDto> getUsers(List<Integer> userIds, int from, int size) {
         PageRequest pageRequest = PageRequest.of(from, size);
-        if (userIds.length == 0) {
+        if (userIds.size() == 0) {
             return userRepository.findAll(pageRequest).stream()
                                  .map(userMapper::toUserDto)
                                  .collect(Collectors.toList());
         }
 
-        List<Integer> listOfIds = Arrays.stream(userIds)
-                                        .boxed()
-                                        .collect(Collectors.toList());
-
-        return userRepository.findAllById(listOfIds).stream()
+        return userRepository.findAllById(userIds).stream()
                              .map(userMapper::toUserDto)
                              .collect(Collectors.toList());
     }
 
     @Override
-    @Transactional
     public void delete(int userId) {
         userRepository.deleteById(userId);
     }

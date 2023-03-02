@@ -1,14 +1,13 @@
 package ru.practicum.evm.category;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.evm.event.EventRepository;
 import ru.practicum.evm.exception.ConflictException;
 import ru.practicum.evm.exception.NotFoundException;
-
-import java.util.Collection;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -19,7 +18,6 @@ public class CategoryServiceImpl implements CategoryService {
     private final CategoryMapper categoryMapper;
 
     @Override
-    @Transactional
     public CategoryDto create(NewCategoryDto newCategoryDto) {
         Category newCategory = categoryMapper.toCategory(newCategoryDto);
         return categoryMapper.toCategoryDto(categoryRepository.save(newCategory));
@@ -33,10 +31,8 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     @Transactional
-    public Collection<CategoryDto> getAll(int from, int size) {
-        return categoryRepository.findAll().stream()
-                                 .map(categoryMapper::toCategoryDto)
-                                 .collect(Collectors.toList());
+    public Page<Category> getAll(Pageable pageable) {
+        return categoryRepository.findAll(pageable);
     }
 
     @Override
@@ -51,7 +47,6 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    @Transactional
     public void delete(int categoryId) {
         if (!eventRepository.findAllByCategory_Id(categoryId).isEmpty()) {
             throw new ConflictException(String.format("Category with id = %s is not empty", categoryId));

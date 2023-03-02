@@ -1,13 +1,14 @@
 package ru.practicum.evm.category;
 
-import java.util.Collection;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 public interface CategoryService {
     CategoryDto create(NewCategoryDto newCategoryDto);
 
     CategoryDto getById(int categoryId);
 
-    Collection<CategoryDto> getAll(int from, int size);
+    Page<Category> getAll(Pageable pageable);
 
     CategoryDto update(int categoryId, NewCategoryDto newCategoryDto);
 
