@@ -29,7 +29,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static ru.practicum.evm.event.mapper.HitMapper.toHitDto;
+import static ru.practicum.evm.event.HitMapper.toHitDto;
 
 @Service
 @RequiredArgsConstructor
