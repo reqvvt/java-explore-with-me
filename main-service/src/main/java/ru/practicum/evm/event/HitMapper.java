@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 import static ru.practicum.mapper.DateTimeMapper.toStringDateTime;
 
 @NoArgsConstructor
-public final class HitMapper {
+public class HitMapper {
     public static HitDto toHitDto(HttpServletRequest request) {
         HitDto hitDto = new HitDto();
         hitDto.setApp("ewm-service");
