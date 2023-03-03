@@ -10,6 +10,6 @@ import java.util.List;
 @Setter
 @RequiredArgsConstructor
 public class EventRequestStatusUpdateRequest {
-    private final List<Integer> requestIds;
-    private final RequestStatus status;
+    private List<Integer> requestIds;
+    private String status;
 }

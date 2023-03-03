@@ -9,9 +9,11 @@ import java.util.Optional;
 @Repository
 public interface RequestRepository extends JpaRepository<ParticipationRequest, Integer> {
 
-    Collection<ParticipationRequest> findAllByRequester_Id(int requesterId);
+    Collection<ParticipationRequest> findAllByRequesterId(int requesterId);
 
-    Collection<ParticipationRequest> findAllByEvent_Id(int eventId);
+    Optional<ParticipationRequest> findByIdAndRequesterId(int requestId, int requesterId);
 
-    Optional<ParticipationRequest> findByRequester_IdAndEvent_Id(int requesterId, int eventId);
+    Collection<ParticipationRequest> findAllByEventId(int eventId);
+
+    Optional<ParticipationRequest> findByRequesterIdAndEventId(int requesterId, int eventId);
 }
