@@ -19,7 +19,6 @@ import ru.practicum.evm.exception.NotFoundException;
 import ru.practicum.evm.user.User;
 import ru.practicum.evm.user.UserRepository;
 import ru.practicum.statsclient.StatsClient;
-import ru.practicum.statsdto.HitDto;
 import ru.practicum.statsdto.StatsDto;
 
 import javax.servlet.http.HttpServletRequest;
@@ -29,6 +28,8 @@ import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static ru.practicum.evm.event.HitMapper.toHitDto;
 
 @Service
 @RequiredArgsConstructor
@@ -68,7 +69,7 @@ public class EventServiceImpl implements EventService {
     @Transactional
     public EventFullDto getPublicById(int eventId, HttpServletRequest request) {
         Event event = findEvent(eventId);
-        addHit(request);
+        statsClient.saveHit(toHitDto(request));
         EventFullDto eventFullDto = eventMapper.toFullEventDto(event);
         return setViewsToEventFullDto(eventFullDto);
     }
@@ -78,7 +79,7 @@ public class EventServiceImpl implements EventService {
     public Collection<EventShortDto> getPublicWithParameters(EventPublicRequestParameters parameters,
                                                              EventRequestSort sort, int from, int size,
                                                              HttpServletRequest request) {
-        addHit(request);
+        statsClient.saveHit(toHitDto(request));
         parameters.checkTime();
 
         PageRequest pageRequest = PageRequest.of(from, size);
@@ -268,15 +269,6 @@ public class EventServiceImpl implements EventService {
     private void updateEventCategory(Event event, int newCategoryId) {
         Category newCategory = findCategory(newCategoryId);
         event.setCategory(newCategory);
-    }
-
-    private void addHit(HttpServletRequest request) {
-        String app = "ewm-main";
-        String uri = request.getRequestURI();
-        String ip = request.getRemoteAddr();
-
-        HitDto requestHitDto = new HitDto(app, uri, ip, LocalDateTime.now().format(formatter));
-        statsClient.saveHit(requestHitDto);
     }
 
     private EventFullDto setViewsToEventFullDto(EventFullDto eventFullDto) {

@@ -1,14 +1,10 @@
 package ru.practicum.stats;
 
-import java.time.LocalDateTime;
+import ru.practicum.statsdto.StatsDto;
+
 import java.util.List;
 
 public interface StatsService {
-    List<HitCount> findAllUniqueByUri(LocalDateTime startTime, LocalDateTime endTime, List<String> uris);
 
-    List<HitCount> findAllUnique(LocalDateTime startTime, LocalDateTime endTime);
-
-    List<HitCount> findAllNoUniqueByUri(LocalDateTime startTime, LocalDateTime endTime, List<String> uris);
-
-    List<HitCount> findAllNoUnique(LocalDateTime startTime, LocalDateTime endTime);
+    List<StatsDto> getStats(String start, String end, List<String> uris, Boolean unique);
 }
