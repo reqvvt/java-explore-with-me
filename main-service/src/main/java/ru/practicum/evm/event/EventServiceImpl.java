@@ -18,7 +18,7 @@ import ru.practicum.evm.exception.ConditionsNotMet;
 import ru.practicum.evm.exception.NotFoundException;
 import ru.practicum.evm.user.User;
 import ru.practicum.evm.user.UserRepository;
-import ru.practicum.mapper.HitMapper;
+
 import ru.practicum.statsclient.StatsClient;
 import ru.practicum.statsdto.StatsDto;
 
@@ -29,6 +29,8 @@ import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static ru.practicum.evm.mapper.HitMapper.toHitDto;
 
 @Service
 @RequiredArgsConstructor
@@ -68,7 +70,7 @@ public class EventServiceImpl implements EventService {
     @Transactional
     public EventFullDto getPublicById(int eventId, HttpServletRequest request) {
         Event event = findEvent(eventId);
-        statsClient.saveHit(HitMapper.toHitDto(request));
+        statsClient.saveHit(toHitDto(request));
         EventFullDto eventFullDto = eventMapper.toFullEventDto(event);
         return setViewsToEventFullDto(eventFullDto);
     }
@@ -78,7 +80,7 @@ public class EventServiceImpl implements EventService {
     public Collection<EventShortDto> getPublicWithParameters(EventPublicRequestParameters parameters,
                                                              EventRequestSort sort, int from, int size,
                                                              HttpServletRequest request) {
-        statsClient.saveHit(HitMapper.toHitDto(request));
+        statsClient.saveHit(toHitDto(request));
         parameters.checkTime();
 
         PageRequest pageRequest = PageRequest.of(from, size);
