@@ -81,6 +81,7 @@ public class CompilationServiceImpl implements CompilationService {
 
     @Override
     public void delete(int compilationId) {
+        checkCompilationExists(compilationId);
         compilationRepository.deleteById(compilationId);
     }
 
@@ -92,5 +93,11 @@ public class CompilationServiceImpl implements CompilationService {
     private Event findEvent(int eventId) {
         return eventRepository.findById(eventId).orElseThrow(() -> new NotFoundException(
                 (String.format("Event with id = %s was not found", eventId))));
+    }
+
+    private void checkCompilationExists(int compilationId) {
+        if (!compilationRepository.existsById(compilationId)) {
+            throw new NotFoundException((String.format("Compilation with id = %s was not found", compilationId)));
+        }
     }
 }

@@ -12,7 +12,6 @@ import ru.practicum.evm.event.EventService;
 import ru.practicum.evm.event.EventState;
 import ru.practicum.evm.event.UpdateEventAdminRequest;
 
-import javax.validation.Valid;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
 import java.time.LocalDateTime;
@@ -31,7 +30,7 @@ public class EventAdminController {
     public ResponseEntity<Collection<EventFullDto>> getAdminAllEvents(
             @RequestParam(defaultValue = "", required = false) List<Integer> users,
             @RequestParam(defaultValue = "", required = false) List<EventState> states,
-            @RequestParam(defaultValue = "", required = false) List<Integer> categories,
+            @RequestParam(required = false) List<Integer> categories,
             @RequestParam(required = false) LocalDateTime rangeStart,
             @RequestParam(required = false) LocalDateTime rangeEnd,
             @RequestParam(defaultValue = "0", required = false) @PositiveOrZero int from,
@@ -50,8 +49,8 @@ public class EventAdminController {
     }
 
     @PatchMapping("/{eventId}")
-    public ResponseEntity<EventFullDto> updateEventByAdmin(@PathVariable @Positive int eventId,
-                                                           @RequestBody @Valid UpdateEventAdminRequest updateEventAdminRequest) {
+    public ResponseEntity<EventFullDto> updateEventByAdmin(@PathVariable int eventId,
+                                                           @RequestBody UpdateEventAdminRequest updateEventAdminRequest) {
         log.info("PATCH-request was received at 'admin/events/{}'. Patch a EVENT with eventID = {}, from ADMIN. " +
                 "New event data: {}", eventId, eventId, updateEventAdminRequest);
         return new ResponseEntity<>(eventService.updateByAdmin(eventId, updateEventAdminRequest), HttpStatus.OK);

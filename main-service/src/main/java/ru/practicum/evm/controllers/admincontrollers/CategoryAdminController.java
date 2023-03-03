@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.evm.category.CategoryDto;
 import ru.practicum.evm.category.CategoryService;
@@ -16,12 +15,11 @@ import javax.validation.Valid;
 @RestController
 @RequestMapping(path = "/admin/categories")
 @RequiredArgsConstructor
-@Validated
 public class CategoryAdminController {
     private final CategoryService categoryService;
 
     @PostMapping
-    public ResponseEntity<CategoryDto> createCompilation(@RequestBody @Valid NewCategoryDto newCategoryDto) {
+    public ResponseEntity<CategoryDto> createCategory(@RequestBody @Valid NewCategoryDto newCategoryDto) {
         log.info("POST-request was received at 'admin/categories'. Create a CATEGORY: {}.", newCategoryDto);
         return new ResponseEntity<>(categoryService.create(newCategoryDto), HttpStatus.CREATED);
     }

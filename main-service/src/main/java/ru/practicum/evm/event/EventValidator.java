@@ -1,6 +1,7 @@
 package ru.practicum.evm.event;
 
 import ru.practicum.evm.exception.DataValidateException;
+import ru.practicum.evm.mapper.DateTimeMapper;
 
 import java.time.LocalDateTime;
 
@@ -9,7 +10,7 @@ public class EventValidator {
     public static void validateNewEventDto(NewEventDto newEvent) {
         String annotation = newEvent.getAnnotation();
         String description = newEvent.getDescription();
-        LocalDateTime eventDate = newEvent.getEventDate();
+        String eventDate = newEvent.getEventDate();
         String title = newEvent.getTitle();
 
         validateAnnotation(annotation);
@@ -42,17 +43,19 @@ public class EventValidator {
         }
     }
 
-    public static void validatePostEventDate(LocalDateTime eventDate) {
+    public static void validatePostEventDate(String eventDate) {
         LocalDateTime now = LocalDateTime.now();
-        if (eventDate.isBefore(now.plusHours(1))) {
+        LocalDateTime validateEventDate = DateTimeMapper.toLocalDateTime(eventDate);
+        if (validateEventDate.isBefore(now.plusHours(1))) {
             throw new DataValidateException("The date and time for which the event is scheduled cannot be earlier" +
                     " than two hours from the current moment");
         }
     }
 
-    public static void validatePatchEventDate(LocalDateTime eventDate) {
+    public static void validatePatchEventDate(String eventDate) {
         LocalDateTime now = LocalDateTime.now();
-        if (eventDate.isBefore(now.plusHours(2))) {
+        LocalDateTime validateEventDate = DateTimeMapper.toLocalDateTime(eventDate);
+        if (validateEventDate.isBefore(now.plusHours(2))) {
             throw new DataValidateException("The date and time for which the event is scheduled cannot be earlier " +
                     "than two hours from the current moment");
         }

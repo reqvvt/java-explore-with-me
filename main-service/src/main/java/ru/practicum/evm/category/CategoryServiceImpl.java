@@ -48,14 +48,22 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public void delete(int categoryId) {
+        checkCategoryExists(categoryId);
         if (!eventRepository.findAllByCategory_Id(categoryId).isEmpty()) {
             throw new ConflictException(String.format("Category with id = %s is not empty", categoryId));
+        } else {
+            categoryRepository.deleteById(categoryId);
         }
-        categoryRepository.deleteById(categoryId);
     }
 
     private Category findCategory(int categoryId) {
         return categoryRepository.findById(categoryId).orElseThrow(() -> new NotFoundException(
                 (String.format("Category with id = %s was not found", categoryId))));
+    }
+
+    private void checkCategoryExists(int categoryId) {
+        if (!categoryRepository.existsById(categoryId)) {
+            throw new NotFoundException((String.format("Category with id = %s was not found", categoryId)));
+        }
     }
 }

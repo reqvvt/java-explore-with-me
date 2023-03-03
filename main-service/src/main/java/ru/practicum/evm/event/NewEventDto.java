@@ -1,12 +1,10 @@
 package ru.practicum.evm.event;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 import javax.validation.constraints.*;
-import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -25,8 +23,7 @@ public class NewEventDto {
     private String description;
 
     @NotNull
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime eventDate;
+    private String eventDate;
 
     @NotNull
     private Location location;

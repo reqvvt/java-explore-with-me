@@ -16,20 +16,21 @@ import ru.practicum.evm.controllers.publiccontrollers.parameters.EventPublicRequ
 import ru.practicum.evm.controllers.publiccontrollers.parameters.EventRequestSort;
 import ru.practicum.evm.exception.ConditionsNotMet;
 import ru.practicum.evm.exception.NotFoundException;
+import ru.practicum.evm.mapper.DateTimeMapper;
 import ru.practicum.evm.user.User;
 import ru.practicum.evm.user.UserRepository;
-
 import ru.practicum.statsclient.StatsClient;
 import ru.practicum.statsdto.StatsDto;
 
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static ru.practicum.evm.event.EventState.*;
+import static ru.practicum.evm.mapper.DateTimeMapper.toStringDateTime;
 import static ru.practicum.evm.mapper.HitMapper.toHitDto;
 
 @Service
@@ -42,7 +43,6 @@ public class EventServiceImpl implements EventService {
     private final CategoryRepository categoryRepository;
     private final StatsClient statsClient;
     private final EventMapper eventMapper;
-    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     @Override
     public EventFullDto create(NewEventDto newEventDto, int userId) {
@@ -129,10 +129,10 @@ public class EventServiceImpl implements EventService {
     @Override
     @Transactional
     public EventFullDto updateByAdmin(int eventId, UpdateEventAdminRequest updateEventAdminRequest) {
-        Event selectedEvent = findEvent(eventId);
+        Event event = findEvent(eventId);
 
         AdminEventState stateAction = updateEventAdminRequest.getStateAction();
-        EventState state = selectedEvent.getState();
+        EventState state = event.getState();
 
         if (stateAction != null) {
             switch (stateAction) {
@@ -141,24 +141,23 @@ public class EventServiceImpl implements EventService {
                         throw new ConditionsNotMet("Cannot publish the event because it's not in the right state: " +
                                 state);
                     }
-                    selectedEvent.setState(EventState.PUBLISHED);
+                    event.setState(EventState.PUBLISHED);
                     break;
                 case REJECT_EVENT:
-                    if (selectedEvent.getState().equals(EventState.PUBLISHED)) {
+                    if (event.getState().equals(EventState.PUBLISHED)) {
                         throw new ConditionsNotMet("Cannot reject the event because it's not in the right state: " +
                                 state);
                     }
-                    selectedEvent.setState(EventState.CANCELED);
+                    event.setState(EventState.CANCELED);
                     break;
             }
         }
-
         UtilityEvent utilityEvent = eventMapper.toUtilityEventClass(updateEventAdminRequest);
-        Event updatedEvent = EventUpdater.updateEventAnnotation(selectedEvent, utilityEvent);
-        updateEventCategory(updatedEvent, utilityEvent.getCategory());
-        updatedEvent.setPublishedOn(LocalDateTime.now());
-        EventFullDto eventFullDto = eventMapper.toFullEventDto(eventRepository.save(updatedEvent));
-        return setViewsToEventFullDto(eventFullDto);
+        updateEventAnnotation(event, utilityEvent);
+        event.setPublishedOn(LocalDateTime.now());
+        EventFullDto eventFullDto = eventMapper.toFullEventDto(eventRepository.save(event));
+        setViewsToEventFullDto(eventFullDto);
+        return eventFullDto;
     }
 
     @Override
@@ -166,25 +165,24 @@ public class EventServiceImpl implements EventService {
     public EventFullDto updateByUser(int eventId, int userId, UpdateEventUserRequest updateEventUserRequest) {
         checkUserExists(userId);
 
-        Event selectedEvent = findEvent(eventId);
-        EventState state = selectedEvent.getState();
+        Event event = findEvent(eventId);
+        EventState state = event.getState();
 
-        if (state.equals(EventState.PUBLISHED)) {
+        if (state.equals(PUBLISHED)) {
             throw new ConditionsNotMet("Only pending or canceled events can be changed");
         }
         UtilityEvent utilityEvent = eventMapper.toUtilityEventClass(updateEventUserRequest);
-        Event updatedEvent = EventUpdater.updateEventAnnotation(selectedEvent, utilityEvent);
+        updateEventAnnotation(event, utilityEvent);
         UpdateEventUserState stateAction = updateEventUserRequest.getStateAction();
         switch (stateAction) {
             case CANCEL_REVIEW:
-                updatedEvent.setState(EventState.CANCELED);
+                event.setState(CANCELED);
                 break;
             case SEND_TO_REVIEW:
-                updatedEvent.setState(EventState.PENDING);
+                event.setState(PENDING);
                 break;
         }
-        updateEventCategory(updatedEvent, utilityEvent.getCategory());
-        EventFullDto eventFullDto = eventMapper.toFullEventDto(eventRepository.save(updatedEvent));
+        EventFullDto eventFullDto = eventMapper.toFullEventDto(eventRepository.save(event));
         return setViewsToEventFullDto(eventFullDto);
     }
 
@@ -246,6 +244,39 @@ public class EventServiceImpl implements EventService {
         return predicate;
     }
 
+    public void updateEventAnnotation(Event event, UtilityEvent utilityEvent) {
+//
+        if (utilityEvent.getAnnotation() != null) {
+            EventValidator.validateAnnotation(utilityEvent.getAnnotation());
+            event.setAnnotation(utilityEvent.getAnnotation());
+        }
+        if (utilityEvent.getCategory() > 0) {
+            event.setCategory(findCategory(utilityEvent.getCategory()));
+        }
+        if (utilityEvent.getDescription() != null) {
+            EventValidator.validateDescription(utilityEvent.getDescription());
+            event.setDescription(utilityEvent.getDescription());
+        }
+        if (utilityEvent.getEventDate() != null) {
+            EventValidator.validatePatchEventDate(utilityEvent.getEventDate());
+            event.setEventDate(DateTimeMapper.toLocalDateTime(utilityEvent.getEventDate()));
+        }
+        if (utilityEvent.getLocation() != null) {
+            event.setLocation(utilityEvent.getLocation());
+        }
+        if (utilityEvent.getPaid() != null) {
+            event.setPaid(utilityEvent.getPaid());
+        }
+        event.setParticipantLimit(utilityEvent.getParticipantLimit());
+        if (utilityEvent.getRequestModeration() != null) {
+            event.setRequestModeration(utilityEvent.getRequestModeration());
+        }
+        if (utilityEvent.getTitle() != null) {
+            EventValidator.validateTitle(utilityEvent.getTitle());
+            event.setTitle(utilityEvent.getTitle());
+        }
+    }
+
     private User findUser(int userId) {
         return userRepository.findById(userId).orElseThrow(() -> new NotFoundException(
                 (String.format("User with id = %s was not found", userId))));
@@ -267,48 +298,35 @@ public class EventServiceImpl implements EventService {
         }
     }
 
-    private void updateEventCategory(Event event, int newCategoryId) {
-        Category newCategory = findCategory(newCategoryId);
-        event.setCategory(newCategory);
-    }
-
     private EventFullDto setViewsToEventFullDto(EventFullDto eventFullDto) {
         int eventId = eventFullDto.getId();
-        Event event = findEvent(eventId);
-        String start = event.getCreatedOn().format(formatter);
-        String end = LocalDateTime.now().format(formatter);
-        List<String> uris = List.of("/events" + eventId);
-        ObjectMapper objectMapper = new ObjectMapper();
-
-        List<StatsDto> stat = objectMapper.convertValue(statsClient.getStat(start, end, uris, false)
-                                                                   .getBody(), new TypeReference<>() {
-        });
-        if (stat.isEmpty()) {
-            eventFullDto.setViews(0);
-        } else {
-            eventFullDto.setViews(stat.get(0).getHits());
-        }
-
+        int views = getViews(eventId);
+        eventFullDto.setViews(views);
         return eventFullDto;
     }
 
     private EventShortDto setViewsToShortDto(EventShortDto eventShortDto) {
         int eventId = eventShortDto.getId();
+        int views = getViews(eventId);
+        eventShortDto.setViews(views);
+        return eventShortDto;
+    }
+
+    private int getViews(int eventId) {
         Event event = findEvent(eventId);
-        String start = event.getCreatedOn().format(formatter);
-        String end = LocalDateTime.now().format(formatter);
+        String start = toStringDateTime(event.getCreatedOn());
+        String end = toStringDateTime(LocalDateTime.now());
         List<String> uris = List.of("/events" + eventId);
         ObjectMapper objectMapper = new ObjectMapper();
+        int views = 0;
 
-        List<StatsDto> stat = objectMapper.convertValue(statsClient.getStat(start, end, uris, false)
-                                                                   .getBody(), new TypeReference<>() {
+        List<StatsDto> stat = objectMapper.convertValue(statsClient.getStat(start, end, uris, false).getBody(), new TypeReference<>() {
         });
-        if (stat.isEmpty()) {
-            eventShortDto.setViews(0);
-        } else {
-            eventShortDto.setViews(stat.get(0).getHits());
+
+        if (!stat.isEmpty()) {
+            views = Math.toIntExact(stat.get(0).getHits());
         }
 
-        return eventShortDto;
+        return views;
     }
 }

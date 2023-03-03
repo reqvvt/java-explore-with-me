@@ -1,13 +1,10 @@
 package ru.practicum.evm.event;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import ru.practicum.evm.category.CategoryDto;
 import ru.practicum.evm.user.UserShortDto;
-
-import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -17,13 +14,10 @@ public class EventFullDto {
     private String annotation;
     private CategoryDto category;
     private int confirmedRequests;
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime createdOn;
+    private String createdOn;
     private String description;
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime eventDate;
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime publishedOn;
+    private String eventDate;
+    private String publishedOn;
     private UserShortDto initiator;
     private Location location;
     private Boolean paid;
