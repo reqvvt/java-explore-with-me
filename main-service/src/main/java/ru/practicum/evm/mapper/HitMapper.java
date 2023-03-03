@@ -1,11 +1,11 @@
 package ru.practicum.evm.mapper;
 
 import lombok.NoArgsConstructor;
-import ru.practicum.mapper.DateTimeMapper;
 import ru.practicum.statsdto.HitDto;
 
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @NoArgsConstructor
 public class HitMapper {
@@ -15,7 +15,7 @@ public class HitMapper {
         hitDto.setApp("ewm-service");
         hitDto.setUri(request.getRequestURI());
         hitDto.setIp(request.getRemoteAddr());
-        hitDto.setTimestamp(DateTimeMapper.toStringDateTime(LocalDateTime.now()));
+        hitDto.setTimestamp(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
         return hitDto;
     }
 }
