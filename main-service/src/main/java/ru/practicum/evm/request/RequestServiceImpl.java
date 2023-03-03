@@ -6,7 +6,10 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.evm.event.Event;
 import ru.practicum.evm.event.EventRepository;
 import ru.practicum.evm.event.EventState;
-import ru.practicum.evm.exception.*;
+import ru.practicum.evm.exception.CancelRequestException;
+import ru.practicum.evm.exception.ConflictException;
+import ru.practicum.evm.exception.NotFoundException;
+import ru.practicum.evm.exception.ParticipantLimitException;
 import ru.practicum.evm.user.User;
 import ru.practicum.evm.user.UserRepository;
 
