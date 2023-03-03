@@ -1,5 +1,6 @@
-package ru.practicum.stats;
+package ru.practicum.mapper;
 
+import ru.practicum.stats.HitCount;
 import ru.practicum.statsdto.StatsDto;
 
 public class StatsMapper {
