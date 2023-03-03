@@ -1,4 +1,4 @@
-package ru.practicum.evm.event;
+package ru.practicum.evm.event.mapper;
 
 import lombok.NoArgsConstructor;
 import ru.practicum.statsdto.HitDto;
