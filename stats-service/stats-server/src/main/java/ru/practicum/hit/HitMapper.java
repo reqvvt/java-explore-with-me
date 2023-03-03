@@ -18,11 +18,11 @@ public class HitMapper {
 
     public static HitDto toHitDto(Hit hit) {
         return HitDto.builder()
-                .id(hit.getId())
-                .app(hit.getApp())
-                .uri(hit.getUri())
-                .ip(hit.getIp())
-                .timestamp(DateTimeMapper.toStringDateTime(hit.getTimestamp()))
-                .build();
+                     .id(hit.getId())
+                     .app(hit.getApp())
+                     .uri(hit.getUri())
+                     .ip(hit.getIp())
+                     .timestamp(DateTimeMapper.toStringDateTime(hit.getTimestamp()))
+                     .build();
     }
 }
