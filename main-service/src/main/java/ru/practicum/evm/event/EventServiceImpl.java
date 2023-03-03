@@ -14,7 +14,7 @@ import ru.practicum.evm.category.CategoryRepository;
 import ru.practicum.evm.controllers.admincontrollers.parameters.EventAdminRequestParameters;
 import ru.practicum.evm.controllers.publiccontrollers.parameters.EventPublicRequestParameters;
 import ru.practicum.evm.controllers.publiccontrollers.parameters.EventRequestSort;
-import ru.practicum.evm.exception.ConditionsNotMet;
+import ru.practicum.evm.exception.ConflictException;
 import ru.practicum.evm.exception.NotFoundException;
 import ru.practicum.evm.mapper.DateTimeMapper;
 import ru.practicum.evm.user.User;
@@ -138,14 +138,14 @@ public class EventServiceImpl implements EventService {
             switch (stateAction) {
                 case PUBLISH_EVENT:
                     if (!state.equals(EventState.PENDING)) {
-                        throw new ConditionsNotMet("Cannot publish the event because it's not in the right state: " +
+                        throw new ConflictException("Cannot publish the event because it's not in the right state: " +
                                 state);
                     }
                     event.setState(EventState.PUBLISHED);
                     break;
                 case REJECT_EVENT:
                     if (event.getState().equals(EventState.PUBLISHED)) {
-                        throw new ConditionsNotMet("Cannot reject the event because it's not in the right state: " +
+                        throw new ConflictException("Cannot reject the event because it's not in the right state: " +
                                 state);
                     }
                     event.setState(EventState.CANCELED);
@@ -169,7 +169,7 @@ public class EventServiceImpl implements EventService {
         EventState state = event.getState();
 
         if (state.equals(PUBLISHED)) {
-            throw new ConditionsNotMet("Only pending or canceled events can be changed");
+            throw new ConflictException("Only pending or canceled events can be changed");
         }
         UtilityEvent utilityEvent = eventMapper.toUtilityEventClass(updateEventUserRequest);
         updateEventAnnotation(event, utilityEvent);

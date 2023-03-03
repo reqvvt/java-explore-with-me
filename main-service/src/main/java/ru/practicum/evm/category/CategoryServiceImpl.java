@@ -19,7 +19,12 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public CategoryDto create(NewCategoryDto newCategoryDto) {
-        Category newCategory = categoryMapper.toCategory(newCategoryDto);
+        Category newCategory;
+        if(categoryRepository.existsByName(newCategoryDto.getName())) {
+            throw new ConflictException(String.format("Category name = '%s' is already exists", newCategoryDto.getName()));
+        } else {
+            newCategory = categoryMapper.toCategory(newCategoryDto);
+        }
         return categoryMapper.toCategoryDto(categoryRepository.save(newCategory));
     }
 
@@ -41,7 +46,12 @@ public class CategoryServiceImpl implements CategoryService {
         Category updatedCategory = findCategory(categoryId);
 
         String updatedName = newCategoryDto.getName();
-        updatedCategory.setName(updatedName);
+
+        if(categoryRepository.existsByName(updatedName)) {
+            throw new ConflictException(String.format("Category name = '%s' is already exists", updatedName));
+        } else {
+            updatedCategory.setName(updatedName);
+        }
 
         return categoryMapper.toCategoryDto(categoryRepository.save(updatedCategory));
     }
