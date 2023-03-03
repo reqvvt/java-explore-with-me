@@ -18,11 +18,12 @@ import java.util.List;
 @RequestMapping(path = "/stats")
 public class StatsController {
     private final StatsService statsService;
+
     @GetMapping
     public ResponseEntity<List<StatsDto>> getStats(@RequestParam @NotBlank String start,
-                                   @RequestParam @NotBlank String end,
-                                   @RequestParam(required = false) List<String> uris,
-                                   @RequestParam(defaultValue = "false") Boolean unique) {
+                                                   @RequestParam @NotBlank String end,
+                                                   @RequestParam(required = false) List<String> uris,
+                                                   @RequestParam(defaultValue = "false") Boolean unique) {
         return ResponseEntity.ok(statsService.getStats(start, end, uris, unique));
     }
 }

@@ -3,9 +3,10 @@ package ru.practicum.hit;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.practicum.mapper.HitMapper;
 import ru.practicum.statsdto.HitDto;
 
-import static ru.practicum.hit.HitMapper.toHitDto;
+import static ru.practicum.mapper.HitMapper.toHitDto;
 
 @RequiredArgsConstructor
 @Service
