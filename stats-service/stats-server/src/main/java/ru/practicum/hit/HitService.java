@@ -1,5 +1,7 @@
 package ru.practicum.hit;
 
+import ru.practicum.statsdto.HitDto;
+
 public interface HitService {
-    Hit add(Hit hit);
+    HitDto save(HitDto hitDto);
 }
