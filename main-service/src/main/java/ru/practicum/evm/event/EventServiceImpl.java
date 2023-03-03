@@ -267,7 +267,9 @@ public class EventServiceImpl implements EventService {
         if (utilityEvent.getPaid() != null) {
             event.setPaid(utilityEvent.getPaid());
         }
-        event.setParticipantLimit(utilityEvent.getParticipantLimit());
+        if (utilityEvent.getParticipantLimit() > 0) {
+            event.setParticipantLimit(utilityEvent.getParticipantLimit());
+        }
         if (utilityEvent.getRequestModeration() != null) {
             event.setRequestModeration(utilityEvent.getRequestModeration());
         }
