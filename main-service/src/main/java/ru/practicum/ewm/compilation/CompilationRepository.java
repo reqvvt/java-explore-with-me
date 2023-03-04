@@ -8,6 +8,7 @@ import java.util.Collection;
 
 @Repository
 public interface CompilationRepository extends JpaRepository<Compilation, Integer> {
+
     @Query("select c from Compilation c where c.pinned = ?1")
-    Collection<Compilation> findCompilationByPinned(Boolean pinned);
+    Collection<Compilation> findByPinned(Boolean pinned);
 }
