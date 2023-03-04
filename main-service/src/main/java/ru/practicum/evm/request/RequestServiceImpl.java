@@ -9,7 +9,6 @@ import ru.practicum.evm.event.EventState;
 import ru.practicum.evm.exception.CancelRequestException;
 import ru.practicum.evm.exception.ConflictException;
 import ru.practicum.evm.exception.NotFoundException;
-import ru.practicum.evm.exception.ParticipantLimitException;
 import ru.practicum.evm.user.User;
 import ru.practicum.evm.user.UserRepository;
 
@@ -20,8 +19,7 @@ import java.util.stream.Collectors;
 
 import static ru.practicum.evm.request.RequestMapper.toParticipationRequestDto;
 import static ru.practicum.evm.request.RequestMapper.toRequest;
-import static ru.practicum.evm.request.RequestStatus.CONFIRMED;
-import static ru.practicum.evm.request.RequestStatus.REJECTED;
+import static ru.practicum.evm.request.RequestStatus.*;
 
 @Service
 @RequiredArgsConstructor
@@ -37,14 +35,13 @@ public class RequestServiceImpl implements RequestService {
         Event event = findEvent(eventId);
 
         int participantLimit = event.getParticipantLimit();
-        int confirmedRequests = event.getConfirmedRequests();
-        boolean isAvailable = (participantLimit - confirmedRequests) > 0;
+        int approvedRequests = event.getConfirmedRequests();
 
         if (requestRepository.findByRequesterIdAndEventId(userId, eventId).isPresent()) {
             throw new ConflictException(String.format("Request with requesterId=%d and eventId=%d already exist", userId, eventId));
         }
-        if (participantLimit != 0 && !isAvailable) {
-            throw new ParticipantLimitException("The participant limit = " + participantLimit + " has been reached");
+        if (participantLimit > 0 && participantLimit == approvedRequests) {
+            throw new ConflictException("The participant limit = " + participantLimit + " has been reached");
         }
         if (userId == event.getInitiator().getId()) {
             throw new ConflictException(String.format("User with id=%d must not be equal to initiator", userId));
@@ -93,7 +90,7 @@ public class RequestServiceImpl implements RequestService {
         String status = request.getStatus();
 
         List<ParticipationRequest> requests = requestIds.stream()
-                                                        .map(this::findRequest)
+                                                        .map(this::getRequestByIdWithCheck)
                                                         .collect(Collectors.toList());
 
         if (status.equals(REJECTED.toString())) {
@@ -112,7 +109,7 @@ public class RequestServiceImpl implements RequestService {
         int potentialParticipants = requestIds.size();
 
         if (participantLimit > 0 && participantLimit == approvedRequests) {
-            throw new ParticipantLimitException("The participant limit = " + participantLimit + " has been reached");
+            throw new ConflictException("The participant limit = " + participantLimit + " has been reached");
         }
 
         if (status.equals(CONFIRMED.toString())) {
@@ -171,6 +168,14 @@ public class RequestServiceImpl implements RequestService {
     private ParticipationRequest findRequest(int requestId) {
         return requestRepository.findById(requestId).orElseThrow(() -> new NotFoundException(
                 (String.format("Category with id = %s was not found", requestId))));
+    }
+
+    private ParticipationRequest getRequestByIdWithCheck(int requestId) {
+        ParticipationRequest request = findRequest(requestId);
+        if (!request.getStatus().equals(PENDING)) {
+            throw new ConflictException("Request must have status pending");
+        }
+        return request;
     }
 
     private void checkUserExists(int userId) {

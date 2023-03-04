@@ -53,19 +53,17 @@ public class ErrorHandler {
                        .build();
     }
 
-    @ExceptionHandler({ConflictException.class, CancelRequestException.class, ParticipantLimitException.class,
-            RequestIsAlreadyExistsException.class})
+    @ExceptionHandler({ConflictException.class, CancelRequestException.class, RequestIsAlreadyExistsException.class})
     @ResponseStatus(HttpStatus.CONFLICT)
     public ApiError handleException(ConflictException e) {
         log.error("409: {}", e.getMessage(), e.getCause());
-        ApiError apiError = ApiError.builder()
-                                    .errors(List.of(Arrays.toString(e.getStackTrace())))
-                                    .message(e.getMessage())
-                                    .reason("Request conflicts with the current state of the server")
-                                    .status("CONFLICT")
-                                    .timestamp(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
-                                    .build();
-        return apiError;
+        return ApiError.builder()
+                       .errors(List.of(Arrays.toString(e.getStackTrace())))
+                       .message(e.getMessage())
+                       .reason("Request conflicts with the current state of the server")
+                       .status("CONFLICT")
+                       .timestamp(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
+                       .build();
     }
 
     @ExceptionHandler(RuntimeException.class)

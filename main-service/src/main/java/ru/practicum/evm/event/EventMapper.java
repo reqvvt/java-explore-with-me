@@ -1,9 +1,10 @@
 package ru.practicum.evm.event;
 
 import org.mapstruct.Mapper;
-import ru.practicum.evm.mapper.DateTimeMapper;
 
 import java.time.LocalDateTime;
+
+import static ru.practicum.evm.mapper.DateTimeMapper.toLocalDateTime;
 
 @Mapper(componentModel = "spring")
 public interface EventMapper {
@@ -27,7 +28,7 @@ public interface EventMapper {
                     .confirmedRequests(0)
                     .createdOn(LocalDateTime.now())
                     .description(newEventDto.getDescription())
-                    .eventDate(DateTimeMapper.toLocalDateTime(newEventDto.getEventDate()))
+                    .eventDate(toLocalDateTime(newEventDto.getEventDate()))
                     .location(newEventDto.getLocation())
                     .paid(paid)
                     .participantLimit(newEventDto.getParticipantLimit())
