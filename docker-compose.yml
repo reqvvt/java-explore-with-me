@@ -29,7 +29,7 @@ services:
     ports:
       - "6542:5432"
     environment:
-      - POSTGRES_DB=ewm_db
+      - POSTGRES_DB=ewm-db
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=iamroot
     volumes:
