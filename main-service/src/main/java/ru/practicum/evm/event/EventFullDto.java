@@ -1,14 +1,14 @@
 package ru.practicum.evm.event;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import ru.practicum.evm.category.CategoryDto;
 import ru.practicum.evm.user.UserShortDto;
 
 @Getter
 @Setter
 @RequiredArgsConstructor
+@AllArgsConstructor
+@Builder
 public class EventFullDto {
     private int id;
     private String annotation;

@@ -5,8 +5,6 @@ import ru.practicum.evm.event.Event;
 import ru.practicum.evm.user.User;
 
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.stream.Collectors;
 
 import static ru.practicum.evm.mapper.DateTimeMapper.toStringDateTime;
 import static ru.practicum.evm.request.RequestStatus.CONFIRMED;
@@ -33,9 +31,4 @@ public interface RequestMapper {
                 request.getStatus().toString()
         );
     }
-
-    static List<ParticipationRequestDto> toParticipationRequestDtoList(List<ParticipationRequest> requests) {
-        return requests.stream().map(RequestMapper::toParticipationRequestDto).collect(Collectors.toList());
-    }
-
 }
