@@ -12,13 +12,14 @@ public interface CompilationMapper {
             return null;
         }
         Boolean pinned = newCompilationDto.getPinned();
+        String title = newCompilationDto.getTitle();
         if (pinned == null) {
             pinned = false;
         }
+
         return Compilation.builder()
                           .pinned(pinned)
-                          .title(newCompilationDto.getTitle())
+                          .title(title)
                           .build();
     }
-
 }
