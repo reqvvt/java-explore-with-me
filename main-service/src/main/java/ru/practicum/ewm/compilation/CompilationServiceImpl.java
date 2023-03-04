@@ -46,7 +46,7 @@ public class CompilationServiceImpl implements CompilationService {
     public Collection<CompilationDto> getAll(Boolean pinned) {
         Collection<Compilation> compilations;
         if (pinned != null) {
-            compilations = compilationRepository.findByPinned(pinned);
+            compilations = compilationRepository.findCompilationByPinned(pinned);
         } else {
             compilations = compilationRepository.findAll();
         }

@@ -120,7 +120,7 @@ public class EventServiceImpl implements EventService {
     public Collection<EventShortDto> getAllUserEvents(int userId, int from, int size) {
         checkUserExists(userId);
         PageRequest pageRequest = PageRequest.of(from, size);
-        return eventRepository.findAllByInitiator_Id(userId, pageRequest).stream()
+        return eventRepository.findAllByInitiatorId(userId, pageRequest).stream()
                               .map(eventMapper::toShortEventDto)
                               .map(this::setViewsToShortDto)
                               .collect(Collectors.toList());
