@@ -16,7 +16,7 @@ public class NewEventDto {
 
     @NotNull
     @Positive
-    private int category;
+    private Long category;
 
     @NotBlank
     @Size(min = 20, max = 7000)
@@ -32,7 +32,7 @@ public class NewEventDto {
     private Boolean paid;
 
     @PositiveOrZero
-    private int participantLimit;
+    private Long participantLimit;
 
     @NotNull
     private Boolean requestModeration;

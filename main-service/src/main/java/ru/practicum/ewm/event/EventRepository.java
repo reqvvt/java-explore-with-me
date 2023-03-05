@@ -9,10 +9,10 @@ import org.springframework.stereotype.Repository;
 import java.util.Collection;
 
 @Repository
-public interface EventRepository extends JpaRepository<Event, Integer>, QuerydslPredicateExecutor<Event> {
+public interface EventRepository extends JpaRepository<Event, Long>, QuerydslPredicateExecutor<Event> {
     @Query("select e from Event e where e.initiator.id = ?1")
-    Collection<Event> findAllByInitiatorId(int initiatorId, PageRequest pageRequest);
+    Collection<Event> findAllByInitiatorId(Long initiatorId, PageRequest pageRequest);
 
     @Query("select e from Event e where e.category.id = ?1")
-    Collection<Event> findAllByCategoryId(int categoryId);
+    Collection<Event> findAllByCategoryId(Long categoryId);
 }

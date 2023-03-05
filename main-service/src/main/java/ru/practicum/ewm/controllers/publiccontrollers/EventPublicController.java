@@ -30,7 +30,7 @@ public class EventPublicController {
     private final EventService eventService;
 
     @GetMapping("/events/{eventId}")
-    public ResponseEntity<EventFullDto> getPublicEventById(@PathVariable @Positive int eventId,
+    public ResponseEntity<EventFullDto> getPublicEventById(@PathVariable @Positive Long eventId,
                                                            HttpServletRequest request) {
         log.info("GET-request was received at '/events/{}'. Get public information about the event with eventId = {}.",
                 eventId, eventId);
@@ -40,14 +40,14 @@ public class EventPublicController {
     @GetMapping("/events")
     public ResponseEntity<Collection<EventShortDto>> getPublicAllEvents(
             @RequestParam(required = false) String text,
-            @RequestParam(defaultValue = "", required = false) List<Integer> ids,
+            @RequestParam(defaultValue = "", required = false) List<Long> ids,
             @RequestParam(required = false) Boolean paid,
             @RequestParam(required = false) LocalDateTime rangeStart,
             @RequestParam(required = false) LocalDateTime rangeEnd,
             @RequestParam(defaultValue = "false", required = false) Boolean onlyAvailable,
             @RequestParam(defaultValue = "EVENT_DATE", required = false) EventRequestSort sort,
-            @RequestParam(defaultValue = "0", required = false) @PositiveOrZero int from,
-            @RequestParam(defaultValue = "10", required = false) @Positive int size,
+            @RequestParam(defaultValue = "0", required = false) @PositiveOrZero Integer from,
+            @RequestParam(defaultValue = "10", required = false) @Positive Integer size,
             HttpServletRequest request) {
 
         EventPublicRequestParameters eventPublicRequestParameters = EventPublicRequestParameters.builder()

@@ -16,5 +16,5 @@ public class StatsDto {
     @NotBlank
     private String uri;
     @PositiveOrZero
-    private long hits;
+    private Long hits;
 }

@@ -10,10 +10,10 @@ import ru.practicum.ewm.user.UserShortDto;
 @AllArgsConstructor
 @Builder
 public class EventFullDto {
-    private int id;
+    private Long id;
     private String annotation;
     private CategoryDto category;
-    private int confirmedRequests;
+    private Long confirmedRequests;
     private String createdOn;
     private String description;
     private String eventDate;
@@ -21,9 +21,9 @@ public class EventFullDto {
     private UserShortDto initiator;
     private Location location;
     private Boolean paid;
-    private int participantLimit;
+    private Long participantLimit;
     private Boolean requestModeration;
     private EventState state;
     private String title;
-    private long views;
+    private Long  views;
 }

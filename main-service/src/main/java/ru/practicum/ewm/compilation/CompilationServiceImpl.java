@@ -22,7 +22,7 @@ public class CompilationServiceImpl implements CompilationService {
 
     @Override
     public CompilationDto create(NewCompilationDto newCompilationDto) {
-        List<Integer> eventIds = newCompilationDto.getEvents();
+        List<Long> eventIds = newCompilationDto.getEvents();
         List<Event> events = Collections.emptyList();
         if (!eventIds.isEmpty()) {
             events = eventIds.stream()
@@ -36,7 +36,7 @@ public class CompilationServiceImpl implements CompilationService {
 
     @Override
     @Transactional
-    public CompilationDto getById(int compilationId) {
+    public CompilationDto getById(Long compilationId) {
         Compilation compilation = findCompilation(compilationId);
         return compilationMapper.toCompilationDto(compilation);
     }
@@ -57,12 +57,12 @@ public class CompilationServiceImpl implements CompilationService {
 
     @Override
     @Transactional
-    public CompilationDto update(int compilationId, UpdateCompilationRequest updateCompilationRequest) {
+    public CompilationDto update(Long compilationId, UpdateCompilationRequest updateCompilationRequest) {
         Compilation updatedCompilation = findCompilation(compilationId);
 
         Boolean updatedPinned = updateCompilationRequest.getPinned();
         String updatedTitle = updateCompilationRequest.getTitle();
-        List<Integer> updatedEventIds = updateCompilationRequest.getEvents();
+        List<Long> updatedEventIds = updateCompilationRequest.getEvents();
 
         if (updatedPinned != null) {
             updatedCompilation.setPinned(updatedPinned);
@@ -80,22 +80,22 @@ public class CompilationServiceImpl implements CompilationService {
     }
 
     @Override
-    public void delete(int compilationId) {
+    public void delete(Long compilationId) {
         checkCompilationExists(compilationId);
         compilationRepository.deleteById(compilationId);
     }
 
-    private Compilation findCompilation(int compilationId) {
+    private Compilation findCompilation(Long compilationId) {
         return compilationRepository.findById(compilationId).orElseThrow(() -> new NotFoundException(
                 (String.format("Compilation with id = %s was not found", compilationId))));
     }
 
-    private Event findEvent(int eventId) {
+    private Event findEvent(Long eventId) {
         return eventRepository.findById(eventId).orElseThrow(() -> new NotFoundException(
                 (String.format("Event with id = %s was not found", eventId))));
     }
 
-    private void checkCompilationExists(int compilationId) {
+    private void checkCompilationExists(Long compilationId) {
         if (!compilationRepository.existsById(compilationId)) {
             throw new NotFoundException((String.format("Compilation with id = %s was not found", compilationId)));
         }

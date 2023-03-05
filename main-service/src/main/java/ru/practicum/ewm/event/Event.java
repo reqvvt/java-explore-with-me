@@ -18,7 +18,7 @@ public class Event {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
-    private int id;
+    private Long id;
 
     @Column(name = "annotation", nullable = false)
     private String annotation;
@@ -28,7 +28,7 @@ public class Event {
     private Category category;
 
     @Column(name = "confirmed_requests", nullable = false)
-    private int confirmedRequests;
+    private Long confirmedRequests;
 
     @Column(name = "created_on", nullable = false)
     private LocalDateTime createdOn;
@@ -56,7 +56,7 @@ public class Event {
     private Boolean paid;
 
     @Column(name = "participant_limit", nullable = false)
-    private int participantLimit;
+    private Long participantLimit;
 
     @Column(name = "request_moderation", nullable = false)
     private Boolean requestModeration;

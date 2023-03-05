@@ -8,9 +8,9 @@ public interface UserService {
 
     UserDto create(NewUserRequest newUserRequest);
 
-    User get(int userId);
+    User get(Long  userId);
 
-    Collection<UserDto> getUsers(List<Integer> userIds, int from, int size);
+    Collection<UserDto> getUsers(List<Long> userIds, Long  from, Long  size);
 
-    void delete(int userId);
+    void delete(Long  userId);
 }

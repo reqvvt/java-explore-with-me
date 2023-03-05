@@ -31,14 +31,14 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public User get(int userId) {
+    public User get(Long userId) {
         return userRepository.findById(userId).orElseThrow(() -> new NotFoundException(
                 (String.format("User with id = %s was not found", userId))));
     }
 
     @Override
     @Transactional
-    public Collection<UserDto> getUsers(List<Integer> userIds, int from, int size) {
+    public Collection<UserDto> getUsers(List<Long> userIds, Integer from, Integer size) {
         PageRequest pageRequest = PageRequest.of(from, size);
         if (userIds.size() == 0) {
             return userRepository.findAll(pageRequest).stream()
@@ -52,7 +52,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void delete(int userId) {
+    public void delete(Long userId) {
         userRepository.deleteById(userId);
     }
 }

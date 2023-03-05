@@ -30,7 +30,7 @@ public class CompilationAdminController {
     }
 
     @PatchMapping("/{compilationId}")
-    public ResponseEntity<CompilationDto> updateCompilation(@PathVariable @Positive int compilationId,
+    public ResponseEntity<CompilationDto> updateCompilation(@PathVariable @Positive Long compilationId,
                                                             @RequestBody UpdateCompilationRequest updateCompilationDto) {
         log.info("PATCH-request was received at 'admin/compilations/{}'. Update the COMPILATION with compilationId = {}. " +
                 "New DATA: {}.", compilationId, compilationId, updateCompilationDto);
@@ -38,7 +38,7 @@ public class CompilationAdminController {
     }
 
     @DeleteMapping("/{compilationId}")
-    public ResponseEntity<Void> deleteCompilation(@PathVariable @Positive int compilationId) {
+    public ResponseEntity<Void> deleteCompilation(@PathVariable @Positive Long compilationId) {
         log.info("DELETE-request was received at 'admin/compilations/{}'. Delete a COMPILATION with compilationId = {}.",
                 compilationId, compilationId);
         compilationService.delete(compilationId);

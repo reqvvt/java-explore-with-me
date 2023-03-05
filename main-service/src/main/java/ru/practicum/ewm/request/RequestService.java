@@ -3,13 +3,13 @@ package ru.practicum.ewm.request;
 import java.util.Collection;
 
 public interface RequestService {
-    ParticipationRequestDto create(int userId, int eventId);
+    ParticipationRequestDto create(Long  userId, Long  eventId);
 
-    Collection<ParticipationRequestDto> getRequestsForInitiator(int eventId, int userId);
+    Collection<ParticipationRequestDto> getRequestsForInitiator(Long  eventId, Long  userId);
 
-    Collection<ParticipationRequestDto> getUserRequests(int userId);
+    Collection<ParticipationRequestDto> getUserRequests(Long  userId);
 
-    EventRequestStatusUpdateResult updateRequestStatus(int eventId, int userId, EventRequestStatusUpdateRequest request);
+    EventRequestStatusUpdateResult updateRequestStatus(Long  eventId, Long  userId, EventRequestStatusUpdateRequest request);
 
-    ParticipationRequestDto cancelRequest(int userId, int requestId);
+    ParticipationRequestDto cancelRequest(Long  userId, Long  requestId);
 }

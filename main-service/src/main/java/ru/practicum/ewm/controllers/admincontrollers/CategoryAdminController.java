@@ -25,7 +25,7 @@ public class CategoryAdminController {
     }
 
     @PatchMapping("/{categoryId}")
-    public ResponseEntity<CategoryDto> patchCategoryById(@PathVariable int categoryId,
+    public ResponseEntity<CategoryDto> patchCategoryById(@PathVariable Long categoryId,
                                                          @RequestBody @Valid NewCategoryDto newCategoryDto) {
         log.info("PATCH-request was received at 'admin/categories/{}'. Patch a CATEGORY with categoryID = {}. " +
                 "New data = {}", categoryId, categoryId, newCategoryDto);
@@ -33,7 +33,7 @@ public class CategoryAdminController {
     }
 
     @DeleteMapping("/{categoryId}")
-    public ResponseEntity<Void> deleteCategoryById(@PathVariable int categoryId) {
+    public ResponseEntity<Void> deleteCategoryById(@PathVariable Long categoryId) {
         log.info("DELETE-request was received at 'admin/categories/{}'. Delete a CATEGORY with categoryID = {}.",
                 categoryId, categoryId);
         categoryService.delete(categoryId);

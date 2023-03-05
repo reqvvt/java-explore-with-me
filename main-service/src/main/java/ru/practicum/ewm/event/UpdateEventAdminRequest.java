@@ -9,12 +9,12 @@ import lombok.Setter;
 @RequiredArgsConstructor
 public class UpdateEventAdminRequest {
     private String annotation;
-    private int category;
+    private Long category;
     private String description;
     private String eventDate;
     private Location location;
     private Boolean paid;
-    private int participantLimit;
+    private Long participantLimit;
     private Boolean requestModeration;
     private AdminEventState stateAction;
     private String title;

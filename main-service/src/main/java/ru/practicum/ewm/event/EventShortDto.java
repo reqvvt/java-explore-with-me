@@ -10,13 +10,13 @@ import ru.practicum.ewm.user.UserShortDto;
 @Setter
 @RequiredArgsConstructor
 public class EventShortDto {
-    private int id;
+    private Long id;
     private String annotation;
     private CategoryDto category;
-    private int confirmedRequests;
+    private Long confirmedRequests;
     private String eventDate;
     private UserShortDto initiator;
     private Boolean paid;
     private String title;
-    private long views;
+    private Long  views;
 }

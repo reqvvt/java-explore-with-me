@@ -28,13 +28,13 @@ public class EventAdminController {
 
     @GetMapping
     public ResponseEntity<Collection<EventFullDto>> getAdminAllEvents(
-            @RequestParam(defaultValue = "", required = false) List<Integer> users,
+            @RequestParam(defaultValue = "", required = false) List<Long> users,
             @RequestParam(defaultValue = "", required = false) List<EventState> states,
-            @RequestParam(required = false) List<Integer> categories,
+            @RequestParam(required = false) List<Long> categories,
             @RequestParam(required = false) LocalDateTime rangeStart,
             @RequestParam(required = false) LocalDateTime rangeEnd,
-            @RequestParam(defaultValue = "0", required = false) @PositiveOrZero int from,
-            @RequestParam(defaultValue = "10", required = false) @Positive int size) {
+            @RequestParam(defaultValue = "0", required = false) @PositiveOrZero Integer from,
+            @RequestParam(defaultValue = "10", required = false) @Positive Integer size) {
 
         EventAdminRequestParameters parameters = EventAdminRequestParameters.builder()
                                                                             .userIds(users)
@@ -49,7 +49,7 @@ public class EventAdminController {
     }
 
     @PatchMapping("/{eventId}")
-    public ResponseEntity<EventFullDto> updateEventByAdmin(@PathVariable int eventId,
+    public ResponseEntity<EventFullDto> updateEventByAdmin(@PathVariable Long eventId,
                                                            @RequestBody UpdateEventAdminRequest updateEventAdminRequest) {
         log.info("PATCH-request was received at 'admin/events/{}'. Patch a EVENT with eventID = {}, from ADMIN. " +
                 "New event data: {}", eventId, eventId, updateEventAdminRequest);

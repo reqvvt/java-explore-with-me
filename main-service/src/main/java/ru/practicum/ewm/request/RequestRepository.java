@@ -8,14 +8,14 @@ import java.util.Collection;
 import java.util.Optional;
 
 @Repository
-public interface RequestRepository extends JpaRepository<ParticipationRequest, Integer> {
+public interface RequestRepository extends JpaRepository<ParticipationRequest, Long> {
 
     @Query("select p from ParticipationRequest p where p.requester.id = ?1")
-    Collection<ParticipationRequest> findAllByRequesterId(int requesterId);
+    Collection<ParticipationRequest> findAllByRequesterId(Long requesterId);
 
     @Query("select p from ParticipationRequest p where p.event.id = ?1")
-    Collection<ParticipationRequest> findAllByEventId(int eventId);
+    Collection<ParticipationRequest> findAllByEventId(Long eventId);
 
     @Query("select p from ParticipationRequest p where p.requester.id = ?1 and p.event.id = ?2")
-    Optional<ParticipationRequest> findByRequesterIdAndEventId(int requesterId, int eventId);
+    Optional<ParticipationRequest> findByRequesterIdAndEventId(Long requesterId, Long eventId);
 }

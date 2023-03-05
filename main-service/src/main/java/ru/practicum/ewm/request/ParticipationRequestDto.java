@@ -10,9 +10,9 @@ import lombok.Setter;
 @RequiredArgsConstructor
 @AllArgsConstructor
 public class ParticipationRequestDto {
-    private int id;
+    private Long  id;
     private String created;
-    private int event;
-    private int requester;
+    private Long  event;
+    private Long  requester;
     private String status;
 }

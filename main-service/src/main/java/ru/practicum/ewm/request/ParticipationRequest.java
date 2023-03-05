@@ -18,7 +18,7 @@ public class ParticipationRequest {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
-    private int id;
+    private Long id;
     @Column(name = "created", nullable = false)
     private LocalDateTime created;
     @ManyToOne

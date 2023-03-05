@@ -12,7 +12,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CompilationDto {
     List<EventShortDto> events;
-    private int id;
+    private Long id;
     private Boolean pinned;
     private String title;
 }

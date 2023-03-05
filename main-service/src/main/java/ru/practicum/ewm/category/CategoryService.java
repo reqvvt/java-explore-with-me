@@ -6,11 +6,11 @@ import org.springframework.data.domain.Pageable;
 public interface CategoryService {
     CategoryDto create(NewCategoryDto newCategoryDto);
 
-    CategoryDto getById(int categoryId);
+    CategoryDto getById(Long categoryId);
 
     Page<Category> getAll(Pageable pageable);
 
-    CategoryDto update(int categoryId, NewCategoryDto newCategoryDto);
+    CategoryDto update(Long categoryId, NewCategoryDto newCategoryDto);
 
-    void delete(int categoryId);
+    void delete(Long categoryId);
 }

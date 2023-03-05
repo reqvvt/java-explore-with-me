@@ -26,9 +26,9 @@ public class UserAdminController {
 
     @GetMapping
     public ResponseEntity<Collection<UserDto>> getUsers(
-            @RequestParam(defaultValue = "", required = false) List<Integer> ids,
-            @RequestParam(defaultValue = "0", required = false) @PositiveOrZero int from,
-            @RequestParam(defaultValue = "10", required = false) @Positive int size
+            @RequestParam(defaultValue = "", required = false) List<Long> ids,
+            @RequestParam(defaultValue = "0", required = false) @PositiveOrZero Integer from,
+            @RequestParam(defaultValue = "10", required = false) @Positive Integer size
     ) {
         log.info("GET-request was received at 'admin/users?ids={}&from={}&size={}'. Get users.", ids, from, size);
         return new ResponseEntity<>(userService.getUsers(ids, from, size), HttpStatus.OK);
@@ -41,7 +41,7 @@ public class UserAdminController {
     }
 
     @DeleteMapping("/{userId}")
-    public ResponseEntity<Void> deleteUserById(@PathVariable @Positive int userId) {
+    public ResponseEntity<Void> deleteUserById(@PathVariable @Positive Long userId) {
         log.info("DELETE-request was received at 'admin/users/{}' . " +
                 "Delete a USER with UserID = {}.", userId, userId);
         userService.delete(userId);

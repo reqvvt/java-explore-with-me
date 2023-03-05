@@ -31,7 +31,7 @@ public class CompilationPublicController {
     }
 
     @GetMapping("/compilations/{compilationId}")
-    public ResponseEntity<CompilationDto> getPublicCompilationById(@PathVariable @Positive int compilationId) {
+    public ResponseEntity<CompilationDto> getPublicCompilationById(@PathVariable @Positive Long compilationId) {
         log.info("GET-request was received at '/compilations/{}' . " +
                 "Get public information about the compilation with compilationId = {}.", compilationId, compilationId);
         return new ResponseEntity<>(compilationService.getById(compilationId), HttpStatus.OK);

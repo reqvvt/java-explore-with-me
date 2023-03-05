@@ -5,11 +5,11 @@ import java.util.Collection;
 public interface CompilationService {
     CompilationDto create(NewCompilationDto newCompilationDto);
 
-    CompilationDto getById(int compilationId);
+    CompilationDto getById(Long compilationId);
 
     Collection<CompilationDto> getAll(Boolean pinned);
 
-    CompilationDto update(int compilationId, UpdateCompilationRequest updateCompilationRequest);
+    CompilationDto update(Long compilationId, UpdateCompilationRequest updateCompilationRequest);
 
-    void delete(int compilationId);
+    void delete(Long compilationId);
 }

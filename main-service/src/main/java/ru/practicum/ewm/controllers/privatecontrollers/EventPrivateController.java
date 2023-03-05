@@ -22,7 +22,7 @@ public class EventPrivateController {
     private final EventService eventService;
 
     @GetMapping("/{userId}/events")
-    public ResponseEntity<Collection<EventShortDto>> getAllUserEvents(@PathVariable @Positive int userId,
+    public ResponseEntity<Collection<EventShortDto>> getAllUserEvents(@PathVariable @Positive Long userId,
                                                                       @RequestParam(defaultValue = "0", required = false) @PositiveOrZero Integer from,
                                                                       @RequestParam(defaultValue = "10", required = false) @Positive Integer size) {
         log.info("GET-request was received at 'users/{}/events?from={}&size={}'. GET all the User's events, " +
@@ -31,15 +31,15 @@ public class EventPrivateController {
     }
 
     @GetMapping("/{userId}/events/{eventId}")
-    public ResponseEntity<EventFullDto> getPrivateEventById(@PathVariable @Positive int userId,
-                                                            @PathVariable @Positive int eventId) {
+    public ResponseEntity<EventFullDto> getPrivateEventById(@PathVariable @Positive Long userId,
+                                                            @PathVariable @Positive Long eventId) {
         log.info("GET-request was received at 'users/{}/events/{}'. Get a EVENT with eventID = {}, " +
                 "from USER with userID={}.", userId, eventId, eventId, userId);
         return new ResponseEntity<>(eventService.getPrivateById(eventId, userId), HttpStatus.OK);
     }
 
     @PostMapping("/{userId}/events")
-    public ResponseEntity<EventFullDto> createEvent(@PathVariable @Positive int userId,
+    public ResponseEntity<EventFullDto> createEvent(@PathVariable @Positive Long userId,
                                                     @RequestBody @Valid NewEventDto newEventDto) {
         log.info("POST-request was received at 'users/{}/events'. Create a EVENT: {}.", userId, newEventDto);
         return new ResponseEntity<>(eventService.create(newEventDto, userId), HttpStatus.CREATED);
@@ -47,8 +47,8 @@ public class EventPrivateController {
 
     @PatchMapping("/{userId}/events/{eventId}")
     public ResponseEntity<EventFullDto> updateEventByUser(
-            @PathVariable @Positive int userId,
-            @PathVariable @Positive int eventId,
+            @PathVariable @Positive Long userId,
+            @PathVariable @Positive Long eventId,
             @RequestBody UpdateEventUserRequest updateEventUserRequest) {
         log.info("PATCH-request was received at 'users/{}/events/{}'. Patch a EVENT with eventID = {}, " +
                 "from USER with userID = {}. New Data ={}", userId, eventId, eventId, userId, updateEventUserRequest);

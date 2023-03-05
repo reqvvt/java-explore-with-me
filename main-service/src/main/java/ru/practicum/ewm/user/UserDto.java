@@ -9,7 +9,7 @@ import lombok.Setter;
 @RequiredArgsConstructor
 public class UserDto {
 
-    private int id;
+    private Long  id;
 
     private String email;
 

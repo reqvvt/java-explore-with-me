@@ -45,10 +45,10 @@ public class EventServiceImpl implements EventService {
     private final EventMapper eventMapper;
 
     @Override
-    public EventFullDto create(NewEventDto newEventDto, int userId) {
+    public EventFullDto create(NewEventDto newEventDto, Long userId) {
         EventValidator.validateNewEventDto(newEventDto);
         User initiator = findUser(userId);
-        int categoryId = newEventDto.getCategory();
+        Long categoryId = newEventDto.getCategory();
         Category category = findCategory(categoryId);
 
         Event newEvent = eventMapper.toEvent(newEventDto);
@@ -60,7 +60,7 @@ public class EventServiceImpl implements EventService {
 
     @Override
     @Transactional
-    public EventFullDto getPrivateById(int eventId, int userId) {
+    public EventFullDto getPrivateById(Long eventId, Long userId) {
         checkUserExists(userId);
         EventFullDto eventFullDto = eventMapper.toFullEventDto(findEvent(eventId));
         return setViewsToEventFullDto(eventFullDto);
@@ -68,9 +68,9 @@ public class EventServiceImpl implements EventService {
 
     @Override
     @Transactional
-    public EventFullDto getPublicById(int eventId, HttpServletRequest request) {
+    public EventFullDto getPublicById(Long eventId, HttpServletRequest request) {
         Event event = findEvent(eventId);
-        statsClient.saveHit(toHitDto(request));
+        statsClient.save(toHitDto(request));
         EventFullDto eventFullDto = eventMapper.toFullEventDto(event);
         return setViewsToEventFullDto(eventFullDto);
     }
@@ -78,9 +78,9 @@ public class EventServiceImpl implements EventService {
     @Override
     @Transactional
     public Collection<EventShortDto> getPublicWithParameters(EventPublicRequestParameters parameters,
-                                                             EventRequestSort sort, int from, int size,
+                                                             EventRequestSort sort, Integer from, Integer size,
                                                              HttpServletRequest request) {
-        statsClient.saveHit(toHitDto(request));
+        statsClient.save(toHitDto(request));
         parameters.checkTime();
 
         PageRequest pageRequest = PageRequest.of(from, size);
@@ -104,7 +104,7 @@ public class EventServiceImpl implements EventService {
 
     @Override
     @Transactional
-    public Collection<EventFullDto> getAdminWithParameters(EventAdminRequestParameters parameters, int from, int size) {
+    public Collection<EventFullDto> getAdminWithParameters(EventAdminRequestParameters parameters, Integer from, Integer size) {
         PageRequest pageRequest = PageRequest.of(from, size);
 
         BooleanBuilder predicate = getAdminPredicate(parameters);
@@ -117,7 +117,7 @@ public class EventServiceImpl implements EventService {
 
     @Override
     @Transactional
-    public Collection<EventShortDto> getAllUserEvents(int userId, int from, int size) {
+    public Collection<EventShortDto> getAllUserEvents(Long userId, Integer from, Integer size) {
         checkUserExists(userId);
         PageRequest pageRequest = PageRequest.of(from, size);
         return eventRepository.findAllByInitiatorId(userId, pageRequest).stream()
@@ -128,7 +128,7 @@ public class EventServiceImpl implements EventService {
 
     @Override
     @Transactional
-    public EventFullDto updateByAdmin(int eventId, UpdateEventAdminRequest updateEventAdminRequest) {
+    public EventFullDto updateByAdmin(Long eventId, UpdateEventAdminRequest updateEventAdminRequest) {
         Event event = findEvent(eventId);
 
         AdminEventState stateAction = updateEventAdminRequest.getStateAction();
@@ -162,7 +162,7 @@ public class EventServiceImpl implements EventService {
 
     @Override
     @Transactional
-    public EventFullDto updateByUser(int eventId, int userId, UpdateEventUserRequest updateEventUserRequest) {
+    public EventFullDto updateByUser(Long eventId, Long userId, UpdateEventUserRequest updateEventUserRequest) {
         checkUserExists(userId);
 
         Event event = findEvent(eventId);
@@ -190,7 +190,7 @@ public class EventServiceImpl implements EventService {
         BooleanBuilder predicate = new BooleanBuilder();
 
         String text = parameters.getText();
-        List<Integer> categoryIds = parameters.getCategoryIds();
+        List<Long> categoryIds = parameters.getCategoryIds();
         Boolean paid = parameters.getPaid();
         LocalDateTime rangeStart = parameters.getRangeStart();
         LocalDateTime rangeEnd = parameters.getRangeEnd();
@@ -220,9 +220,9 @@ public class EventServiceImpl implements EventService {
     private BooleanBuilder getAdminPredicate(EventAdminRequestParameters parameters) {
         BooleanBuilder predicate = new BooleanBuilder();
 
-        List<Integer> userIds = parameters.getUserIds();
+        List<Long> userIds = parameters.getUserIds();
         List<EventState> states = parameters.getStates();
-        List<Integer> categoryIds = parameters.getCategoryIds();
+        List<Long> categoryIds = parameters.getCategoryIds();
         LocalDateTime rangeStart = parameters.getRangeStart();
         LocalDateTime rangeEnd = parameters.getRangeEnd();
 
@@ -279,50 +279,50 @@ public class EventServiceImpl implements EventService {
         }
     }
 
-    private User findUser(int userId) {
+    private User findUser(Long userId) {
         return userRepository.findById(userId).orElseThrow(() -> new NotFoundException(
                 (String.format("User with id = %s was not found", userId))));
     }
 
-    private Event findEvent(int eventId) {
+    private Event findEvent(Long eventId) {
         return eventRepository.findById(eventId).orElseThrow(() -> new NotFoundException(
                 (String.format("Event with id = %s was not found", eventId))));
     }
 
-    private Category findCategory(int categoryId) {
+    private Category findCategory(Long categoryId) {
         return categoryRepository.findById(categoryId).orElseThrow(() -> new NotFoundException(
                 (String.format("Category with id = %s was not found", categoryId))));
     }
 
-    private void checkUserExists(int userId) {
+    private void checkUserExists(Long userId) {
         if (!userRepository.existsById(userId)) {
             throw new NotFoundException((String.format("User with id = %s was not found", userId)));
         }
     }
 
     private EventFullDto setViewsToEventFullDto(EventFullDto eventFullDto) {
-        int eventId = eventFullDto.getId();
-        int views = getViews(eventId);
+        Long eventId = eventFullDto.getId();
+        Long views = getViews(eventId);
         eventFullDto.setViews(views);
         return eventFullDto;
     }
 
     private EventShortDto setViewsToShortDto(EventShortDto eventShortDto) {
-        int eventId = eventShortDto.getId();
-        int views = getViews(eventId);
+        Long eventId = eventShortDto.getId();
+        Long views = getViews(eventId);
         eventShortDto.setViews(views);
         return eventShortDto;
     }
 
-    private int getViews(int eventId) {
+    private Long getViews(Long eventId) {
         Event event = findEvent(eventId);
         String start = toStringDateTime(event.getCreatedOn());
         String end = toStringDateTime(LocalDateTime.now());
         List<String> uris = List.of("/events" + eventId);
         ObjectMapper objectMapper = new ObjectMapper();
-        int views = 0;
+        Long views = 0;
 
-        List<StatsDto> stat = objectMapper.convertValue(statsClient.getStat(start, end, uris, false).getBody(), new TypeReference<>() {
+        List<StatsDto> stat = objectMapper.convertValue(statsClient.getStats(start, end, uris, false).getBody(), new TypeReference<>() {
         });
 
         if (!stat.isEmpty()) {

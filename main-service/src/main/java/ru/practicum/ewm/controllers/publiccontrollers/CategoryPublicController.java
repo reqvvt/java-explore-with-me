@@ -30,8 +30,8 @@ public class CategoryPublicController {
 
     @GetMapping("/categories")
     public ResponseEntity<Collection<CategoryDto>> getAllCategories(
-            @RequestParam(defaultValue = "0", required = false) @PositiveOrZero int from,
-            @RequestParam(defaultValue = "10", required = false) @Positive int size) {
+            @RequestParam(defaultValue = "0", required = false) @PositiveOrZero Integer from,
+            @RequestParam(defaultValue = "10", required = false) @Positive Integer size) {
         Pageable pageable = PageRequest.of(from / size, size);
         log.info("GET-request was received at '/categories?from={}&size={}' . Get all categories.", from, size);
         return new ResponseEntity<>(categoryService.getAll(pageable).stream()
@@ -40,7 +40,7 @@ public class CategoryPublicController {
     }
 
     @GetMapping("/categories/{categoryId}")
-    public ResponseEntity<CategoryDto> getCategoryById(@PathVariable @Positive int categoryId) {
+    public ResponseEntity<CategoryDto> getCategoryById(@PathVariable @Positive Long categoryId) {
         log.info("GET-request was received at '/categories/{}' . Get category by category ID = {}.", categoryId, categoryId);
         return new ResponseEntity<>(categoryService.getById(categoryId), HttpStatus.OK);
     }

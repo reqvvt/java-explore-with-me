@@ -17,28 +17,25 @@ public class StatsClient extends BaseClient {
     private static final String HIT_API_PREFIX = "/hit";
 
     @Autowired
-    public StatsClient(@Value("http://localhost:9090") String serverUrl, RestTemplateBuilder builder) {
-        super(
-                builder
-                        .uriTemplateHandler(new DefaultUriBuilderFactory(serverUrl))
-                        .requestFactory(HttpComponentsClientHttpRequestFactory::new)
-                        .build()
+    public StatsClient(@Value("${stats-service.url}") String serverUrl, RestTemplateBuilder builder) {
+        super(builder
+                .uriTemplateHandler(new DefaultUriBuilderFactory(serverUrl))
+                .requestFactory(HttpComponentsClientHttpRequestFactory::new)
+                .build()
         );
     }
 
-    public ResponseEntity<Object> saveHit(HitDto hitDto) {
+    public ResponseEntity<Object> save(HitDto hitDto) {
         return post(HIT_API_PREFIX, hitDto);
     }
 
-    public ResponseEntity<Object> getStat(String start,
-                                          String end,
-                                          List<String> uris,
-                                          Boolean unique) {
+    public ResponseEntity<Object> getStats(String start, String end, List<String> uris, Boolean unique) {
         Map<String, Object> parameters = Map.of(
                 "start", start,
                 "end", end,
                 "uris", uris,
-                "unique", unique);
+                "unique", unique
+        );
         return get("/stats?start={start}&end={end}&uris={uris}&unique={unique}", null, parameters);
     }
 }

@@ -30,7 +30,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     @Transactional
-    public CategoryDto getById(int categoryId) {
+    public CategoryDto getById(Long categoryId) {
         return categoryMapper.toCategoryDto(findCategory(categoryId));
     }
 
@@ -42,7 +42,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     @Transactional
-    public CategoryDto update(int categoryId, NewCategoryDto newCategoryDto) {
+    public CategoryDto update(Long categoryId, NewCategoryDto newCategoryDto) {
         Category updatedCategory = findCategory(categoryId);
 
         String updatedName = newCategoryDto.getName();
@@ -57,7 +57,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public void delete(int categoryId) {
+    public void delete(Long categoryId) {
         checkCategoryExists(categoryId);
         if (!eventRepository.findAllByCategoryId(categoryId).isEmpty()) {
             throw new ConflictException(String.format("Category with id = %s is not empty", categoryId));
@@ -66,12 +66,12 @@ public class CategoryServiceImpl implements CategoryService {
         }
     }
 
-    private Category findCategory(int categoryId) {
+    private Category findCategory(Long categoryId) {
         return categoryRepository.findById(categoryId).orElseThrow(() -> new NotFoundException(
                 (String.format("Category with id = %s was not found", categoryId))));
     }
 
-    private void checkCategoryExists(int categoryId) {
+    private void checkCategoryExists(Long categoryId) {
         if (!categoryRepository.existsById(categoryId)) {
             throw new NotFoundException((String.format("Category with id = %s was not found", categoryId)));
         }

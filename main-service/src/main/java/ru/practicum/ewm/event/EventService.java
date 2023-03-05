@@ -8,21 +8,21 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.Collection;
 
 public interface EventService {
-    EventFullDto create(NewEventDto newEventDto, int userId);
+    EventFullDto create(NewEventDto newEventDto, Long userId);
 
-    EventFullDto getPrivateById(int eventId, int userId);
+    EventFullDto getPrivateById(Long eventId, Long userId);
 
-    EventFullDto getPublicById(int eventId, HttpServletRequest request);
+    EventFullDto getPublicById(Long eventId, HttpServletRequest request);
 
     Collection<EventShortDto> getPublicWithParameters(EventPublicRequestParameters eventPublicRequestParameters,
-                                                      EventRequestSort sort, int from, int size,
+                                                      EventRequestSort sort, Integer from, Integer size,
                                                       HttpServletRequest request);
 
-    Collection<EventFullDto> getAdminWithParameters(EventAdminRequestParameters parameters, int from, int size);
+    Collection<EventFullDto> getAdminWithParameters(EventAdminRequestParameters parameters, Integer from, Integer size);
 
-    Collection<EventShortDto> getAllUserEvents(int userId, int from, int size);
+    Collection<EventShortDto> getAllUserEvents(Long userId, Integer from, Integer size);
 
-    EventFullDto updateByAdmin(int eventId, UpdateEventAdminRequest updateEventAdminRequest);
+    EventFullDto updateByAdmin(Long eventId, UpdateEventAdminRequest updateEventAdminRequest);
 
-    EventFullDto updateByUser(int eventId, int userId, UpdateEventUserRequest updateEventUserRequest);
+    EventFullDto updateByUser(Long eventId, Long userId, UpdateEventUserRequest updateEventUserRequest);
 }
