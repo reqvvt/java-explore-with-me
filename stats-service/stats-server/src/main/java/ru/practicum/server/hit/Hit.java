@@ -1,4 +1,4 @@
-package ru.practicum.hit;
+package ru.practicum.server.hit;
 
 import lombok.*;
 

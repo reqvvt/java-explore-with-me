@@ -1,7 +1,7 @@
-package ru.practicum.mapper;
+package ru.practicum.server.mapper;
 
 import lombok.NoArgsConstructor;
-import ru.practicum.hit.Hit;
+import ru.practicum.server.hit.Hit;
 import ru.practicum.statsdto.HitDto;
 
 @NoArgsConstructor

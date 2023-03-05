@@ -1,12 +1,10 @@
-package ru.practicum.hit;
+package ru.practicum.server.hit;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.practicum.mapper.HitMapper;
+import ru.practicum.server.mapper.HitMapper;
 import ru.practicum.statsdto.HitDto;
-
-import static ru.practicum.mapper.HitMapper.toHitDto;
 
 @RequiredArgsConstructor
 @Service
@@ -17,6 +15,6 @@ public class HitServiceImpl implements HitService {
     @Override
     @Transactional
     public HitDto save(HitDto hitDto) {
-        return toHitDto(hitRepository.save(HitMapper.toHit(hitDto)));
+        return HitMapper.toHitDto(hitRepository.save(HitMapper.toHit(hitDto)));
     }
 }
