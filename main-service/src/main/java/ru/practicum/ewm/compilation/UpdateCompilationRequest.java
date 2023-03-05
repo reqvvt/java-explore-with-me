@@ -12,7 +12,7 @@ import java.util.List;
 @Setter
 @RequiredArgsConstructor
 public class UpdateCompilationRequest {
-    private List<Integer> events;
+    private List<Long> events;
     private Boolean pinned;
     @NotBlank
     @Size(min = 3, max = 128)

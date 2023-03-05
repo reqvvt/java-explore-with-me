@@ -12,9 +12,9 @@ import java.util.List;
 @RequiredArgsConstructor
 @AllArgsConstructor
 public class EventAdminRequestParameters {
-    private List<Integer> userIds;
+    private List<Long> userIds;
     private List<EventState> states;
-    private List<Integer> categoryIds;
+    private List<Long> categoryIds;
     private LocalDateTime rangeStart;
     private LocalDateTime rangeEnd;
 }
