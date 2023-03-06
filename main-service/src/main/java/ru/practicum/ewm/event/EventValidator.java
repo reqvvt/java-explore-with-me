@@ -5,6 +5,8 @@ import ru.practicum.ewm.mapper.DateTimeMapper;
 
 import java.time.LocalDateTime;
 
+import static ru.practicum.ewm.mapper.DateTimeMapper.toLocalDateTime;
+
 public class EventValidator {
 
     public static void validateNewEventDto(NewEventDto newEvent) {
@@ -45,7 +47,7 @@ public class EventValidator {
 
     public static void validatePostEventDate(String eventDate) {
         LocalDateTime now = LocalDateTime.now();
-        LocalDateTime validateEventDate = DateTimeMapper.toLocalDateTime(eventDate);
+        LocalDateTime validateEventDate = toLocalDateTime(eventDate);
         if (validateEventDate.isBefore(now.plusHours(1))) {
             throw new ConflictException("The date and time for which the event is scheduled cannot be earlier" +
                     " than two hours from the current moment");
@@ -54,10 +56,22 @@ public class EventValidator {
 
     public static void validatePatchEventDate(String eventDate) {
         LocalDateTime now = LocalDateTime.now();
-        LocalDateTime validateEventDate = DateTimeMapper.toLocalDateTime(eventDate);
+        LocalDateTime validateEventDate = toLocalDateTime(eventDate);
         if (validateEventDate.isBefore(now.plusHours(2))) {
             throw new ConflictException("The date and time for which the event is scheduled cannot be earlier " +
                     "than two hours from the current moment");
+        }
+    }
+
+    public static void checkEventDateByAdmin(Event event, UpdateEventAdminRequest updateEventAdminRequest) {
+        if (updateEventAdminRequest.getEventDate() != null) {
+            LocalDateTime validateEventDate = toLocalDateTime(updateEventAdminRequest.getEventDate());
+            LocalDateTime publishedOn = event.getPublishedOn();
+
+            if (validateEventDate.isBefore(publishedOn.plusHours(1)) || validateEventDate.isBefore(LocalDateTime.now())) {
+                throw new ConflictException("Field: eventDate. Error: must contain a date not earlier than one hour from " +
+                        "the date of publication. Value: " + event);
+            }
         }
     }
 

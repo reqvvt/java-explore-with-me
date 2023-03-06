@@ -34,7 +34,8 @@ CREATE TABLE IF NOT EXISTS events (
     participant_limit  INTEGER                                         NOT NULL,
     request_moderation BOOLEAN                                         NOT NULL,
     state              VARCHAR(64)                                     NOT NULL,
-    title              VARCHAR(256)                                    NOT NULL
+    title              VARCHAR(256)                                    NOT NULL,
+    views              BIGINT
 );
 
 CREATE TABLE IF NOT EXISTS compilations (

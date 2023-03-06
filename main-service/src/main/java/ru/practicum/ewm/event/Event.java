@@ -23,7 +23,7 @@ public class Event {
     @Column(name = "annotation", nullable = false)
     private String annotation;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id", nullable = false)
     private Category category;
 
@@ -42,10 +42,11 @@ public class Event {
     @Column(name = "published_on")
     private LocalDateTime publishedOn;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "initiator_id", nullable = false)
     private User initiator;
 
+    @Embedded
     @AttributeOverrides({
             @AttributeOverride(name = "lat", column = @Column(name = "location_lat")),
             @AttributeOverride(name = "lon", column = @Column(name = "location_lon"))
@@ -67,4 +68,7 @@ public class Event {
 
     @Column(name = "title", nullable = false)
     private String title;
+
+    @Column(name = "views")
+    private Long views;
 }

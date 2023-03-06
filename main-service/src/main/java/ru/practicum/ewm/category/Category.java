@@ -1,5 +1,6 @@
 package ru.practicum.ewm.category;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -9,6 +10,7 @@ import javax.persistence.*;
 @Entity
 @Table(name = "categories")
 @RequiredArgsConstructor
+@AllArgsConstructor
 @Getter
 @Setter
 public class Category {
