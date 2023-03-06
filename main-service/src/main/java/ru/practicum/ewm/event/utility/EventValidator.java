@@ -1,7 +1,9 @@
-package ru.practicum.ewm.event;
+package ru.practicum.ewm.event.utility;
 
+import ru.practicum.ewm.event.Event;
+import ru.practicum.ewm.event.NewEventDto;
+import ru.practicum.ewm.event.UpdateEventAdminRequest;
 import ru.practicum.ewm.exception.ConflictException;
-import ru.practicum.ewm.mapper.DateTimeMapper;
 
 import java.time.LocalDateTime;
 
@@ -54,26 +56,25 @@ public class EventValidator {
         }
     }
 
-    public static void validatePatchEventDate(String eventDate) {
-        LocalDateTime now = LocalDateTime.now();
-        LocalDateTime validateEventDate = toLocalDateTime(eventDate);
-        if (validateEventDate.isBefore(now.plusHours(2))) {
-            throw new ConflictException("The date and time for which the event is scheduled cannot be earlier " +
-                    "than two hours from the current moment");
+    public static void checkEventDateByInitiator(String eventDate) {
+        if (eventDate != null) {
+            LocalDateTime dateTime = toLocalDateTime(eventDate);
+            if (dateTime.isBefore(LocalDateTime.now().plusHours(2))) {
+                throw new ConflictException("Field: eventDate. Error: должно содержать дату, которая еще не наступила. " +
+                        "Value: " + dateTime);
+            }
         }
     }
 
     public static void checkEventDateByAdmin(Event event, UpdateEventAdminRequest updateEventAdminRequest) {
         if (updateEventAdminRequest.getEventDate() != null) {
-            LocalDateTime validateEventDate = toLocalDateTime(updateEventAdminRequest.getEventDate());
+            LocalDateTime eventDate = toLocalDateTime(updateEventAdminRequest.getEventDate());
             LocalDateTime publishedOn = event.getPublishedOn();
 
-            if (validateEventDate.isBefore(publishedOn.plusHours(1)) || validateEventDate.isBefore(LocalDateTime.now())) {
-                throw new ConflictException("Field: eventDate. Error: must contain a date not earlier than one hour from " +
-                        "the date of publication. Value: " + event);
+            if (eventDate.isBefore(publishedOn.plusHours(1)) || eventDate.isBefore(LocalDateTime.now())) {
+                throw new ConflictException("Field: eventDate. Error: must contain a date not earlier than one hour from" +
+                        " the date of publication. Value: " + eventDate);
             }
         }
     }
-
-
 }

@@ -7,7 +7,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.ewm.apiPrivate.service.EventPrivateService;
-import ru.practicum.ewm.event.*;
+import ru.practicum.ewm.event.EventFullDto;
+import ru.practicum.ewm.event.EventShortDto;
+import ru.practicum.ewm.event.NewEventDto;
+import ru.practicum.ewm.event.UpdateEventUserRequest;
 import ru.practicum.ewm.request.EventRequestStatusUpdateRequest;
 import ru.practicum.ewm.request.EventRequestStatusUpdateResult;
 import ru.practicum.ewm.request.ParticipationRequestDto;
@@ -36,12 +39,12 @@ public class EventPrivateController {
         return new ResponseEntity<>(service.getAllByInitiatorId(userId, from, size), HttpStatus.OK);
     }
 
-    @GetMapping("{eventId}")
-    public ResponseEntity<EventFullDto> getPrivateByIdAndInitiatorId(@PathVariable @Positive Long userId,
-                                                                     @PathVariable @Positive Long eventId) {
+    @GetMapping("/{eventId}")
+    public ResponseEntity<EventFullDto> getByIdAndInitiatorId(@PathVariable @Positive Long userId,
+                                                              @PathVariable @Positive Long eventId) {
         log.info("GET-request was received at 'users/{}/events/{}'. Get a EVENT with eventID = {}, " +
                 "from USER with userID={}.", userId, eventId, eventId, userId);
-        return new ResponseEntity<>(service.getPrivateByIdAndInitiatorId(eventId, userId), HttpStatus.OK);
+        return new ResponseEntity<>(service.getByIdAndInitiatorId(eventId, userId), HttpStatus.OK);
     }
 
     @PostMapping
@@ -51,7 +54,7 @@ public class EventPrivateController {
         return new ResponseEntity<>(service.save(newEventDto, userId), HttpStatus.CREATED);
     }
 
-    @PatchMapping("{eventId}")
+    @PatchMapping("/{eventId}")
     public ResponseEntity<EventFullDto> updateByInitiator(@PathVariable @Positive Long userId,
                                                           @PathVariable @Positive Long eventId,
                                                           @RequestBody UpdateEventUserRequest updateEventUserRequest) {
@@ -60,7 +63,7 @@ public class EventPrivateController {
         return new ResponseEntity<>(service.updateByInitiator(eventId, userId, updateEventUserRequest), HttpStatus.OK);
     }
 
-    @GetMapping("{eventId}/requests")
+    @GetMapping("/{eventId}/requests")
     public ResponseEntity<List<ParticipationRequestDto>> getRequestsByEventIdAndInitiatorId(@PathVariable Long userId,
                                                                                             @PathVariable Long eventId) {
         log.info("GET-request was received at 'users/{}/events/{}/requests'. Get a EVENT with eventID = {}, " +
@@ -68,7 +71,7 @@ public class EventPrivateController {
         return new ResponseEntity<>(service.getRequestsByEventIdAndInitiatorId(eventId, userId), HttpStatus.OK);
     }
 
-    @PatchMapping("{eventId}/requests")
+    @PatchMapping("/{eventId}/requests")
     public ResponseEntity<EventRequestStatusUpdateResult> updateRequestStatusByInitiator(@PathVariable Long userId,
                                                                                          @PathVariable Long eventId,
                                                                                          @RequestBody EventRequestStatusUpdateRequest eventRequestStatusUpdateRequest) {

@@ -8,33 +8,21 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.ewm.apiAdmin.parameters.EventAdminRequestParameters;
-import ru.practicum.ewm.apiPublic.parameters.EventPublicRequestParameters;
-import ru.practicum.ewm.apiPublic.parameters.EventRequestSort;
 import ru.practicum.ewm.category.Category;
 import ru.practicum.ewm.category.CategoryRepository;
 import ru.practicum.ewm.event.*;
 import ru.practicum.ewm.exception.ConflictException;
 import ru.practicum.ewm.exception.NotFoundException;
-import ru.practicum.ewm.user.User;
-import ru.practicum.ewm.user.UserRepository;
-import ru.practicum.statsclient.StatsClient;
 
-import javax.servlet.http.HttpServletRequest;
-import java.time.LocalDateTime;
 import java.util.Collection;
-import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import static ru.practicum.ewm.event.AdminEventState.PUBLISH_EVENT;
 import static ru.practicum.ewm.event.AdminEventState.REJECT_EVENT;
-import static ru.practicum.ewm.event.EventMapper.toEvent;
 import static ru.practicum.ewm.event.EventState.*;
-import static ru.practicum.ewm.event.EventValidator.*;
-import static ru.practicum.ewm.event.UpdateEventUserState.CANCEL_REVIEW;
-import static ru.practicum.ewm.event.UpdateEventUserState.SEND_TO_REVIEW;
+import static ru.practicum.ewm.event.utility.EventValidator.checkEventDateByAdmin;
 import static ru.practicum.ewm.mapper.DateTimeMapper.toLocalDateTime;
-import static ru.practicum.ewm.mapper.HitMapper.toHitDto;
 
 @Service
 @RequiredArgsConstructor
@@ -56,7 +44,6 @@ public class EventAdminServiceImpl implements EventAdminService {
                      .map(eventMapper::toEventFullDto)
                      .collect(Collectors.toList());
     }
-
 
 
     @Override

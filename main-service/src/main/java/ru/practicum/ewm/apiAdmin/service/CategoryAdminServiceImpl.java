@@ -1,8 +1,6 @@
 package ru.practicum.ewm.apiAdmin.service;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.ewm.category.*;
@@ -21,7 +19,13 @@ public class CategoryAdminServiceImpl implements CategoryAdminService {
 
     @Override
     public CategoryDto save(NewCategoryDto newCategoryDto) {
-        return categoryMapper.toCategoryDto(categoryRepository.save(categoryMapper.toCategory(newCategoryDto)));
+        Category newCategory;
+        if (categoryRepository.existsCategoryByName(newCategoryDto.getName())) {
+            throw new ConflictException(String.format("Category name = '%s' is already exists", newCategoryDto.getName()));
+        } else {
+            newCategory = categoryMapper.toCategory(newCategoryDto);
+        }
+        return categoryMapper.toCategoryDto(categoryRepository.save(newCategory));
     }
 
     @Override
@@ -29,7 +33,7 @@ public class CategoryAdminServiceImpl implements CategoryAdminService {
     public CategoryDto update(Long categoryId, NewCategoryDto newCategoryDto) {
         Category category = findCategory(categoryId);
 
-        if(newCategoryDto.getName() == null) {
+        if (newCategoryDto.getName() == null) {
             throw new DataValidateException("Field: name. Error: must not be blank. Value: null");
         }
 

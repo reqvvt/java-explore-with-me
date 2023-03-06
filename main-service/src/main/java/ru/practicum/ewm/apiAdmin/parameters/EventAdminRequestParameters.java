@@ -3,7 +3,6 @@ package ru.practicum.ewm.apiAdmin.parameters;
 import lombok.*;
 import ru.practicum.ewm.event.EventState;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Builder

@@ -33,7 +33,7 @@ public class BaseClient {
         return get(path, null, parameters);
     }
 
-    protected ResponseEntity<Object> get(String path, Long  userId, @Nullable Map<String, Object> parameters) {
+    protected ResponseEntity<Object> get(String path, Long userId, @Nullable Map<String, Object> parameters) {
         return makeAndSendRequest(HttpMethod.GET, path, userId, parameters, null);
     }
 
@@ -41,11 +41,11 @@ public class BaseClient {
         return post(path, null, null, body);
     }
 
-    protected <T> ResponseEntity<Object> post(String path, Long  userId, @Nullable Map<String, Object> parameters, T body) {
+    protected <T> ResponseEntity<Object> post(String path, Long userId, @Nullable Map<String, Object> parameters, T body) {
         return makeAndSendRequest(HttpMethod.POST, path, userId, parameters, body);
     }
 
-    private <T> ResponseEntity<Object> makeAndSendRequest(HttpMethod method, String path, Long  userId, @Nullable Map<String, Object> parameters, @Nullable T body) {
+    private <T> ResponseEntity<Object> makeAndSendRequest(HttpMethod method, String path, Long userId, @Nullable Map<String, Object> parameters, @Nullable T body) {
         HttpEntity<T> requestEntity = new HttpEntity<>(body, defaultHeaders(userId));
 
         ResponseEntity<Object> shareitServerResponse;
@@ -61,7 +61,7 @@ public class BaseClient {
         return prepareGatewayResponse(shareitServerResponse);
     }
 
-    private HttpHeaders defaultHeaders(Long  userId) {
+    private HttpHeaders defaultHeaders(Long userId) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.setAccept(List.of(MediaType.APPLICATION_JSON));

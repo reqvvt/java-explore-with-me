@@ -10,9 +10,9 @@ public interface UserService {
 
     UserDto save(NewUserRequest newUserRequest);
 
-    User get(Long  userId);
+    User get(Long userId);
 
     Collection<UserDto> getAll(List<Long> userIds, @PositiveOrZero Integer from, @Positive Integer size);
 
-    void delete(Long  userId);
+    void delete(Long userId);
 }

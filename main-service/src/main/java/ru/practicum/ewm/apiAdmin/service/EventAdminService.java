@@ -1,7 +1,8 @@
 package ru.practicum.ewm.apiAdmin.service;
 
 import ru.practicum.ewm.apiAdmin.parameters.EventAdminRequestParameters;
-import ru.practicum.ewm.event.*;
+import ru.practicum.ewm.event.EventFullDto;
+import ru.practicum.ewm.event.UpdateEventAdminRequest;
 
 import java.util.Collection;
 

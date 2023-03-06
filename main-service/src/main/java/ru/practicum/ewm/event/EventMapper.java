@@ -4,8 +4,6 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.stream.Collectors;
 
 import static ru.practicum.ewm.mapper.DateTimeMapper.toLocalDateTime;
 

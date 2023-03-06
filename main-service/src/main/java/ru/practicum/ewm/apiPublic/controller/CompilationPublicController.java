@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ru.practicum.ewm.apiPublic.service.CompilationPublicService;
 import ru.practicum.ewm.compilation.CompilationDto;
-import ru.practicum.ewm.apiAdmin.service.CompilationAdminService;
 
 import javax.validation.constraints.Positive;
 import java.util.Collection;

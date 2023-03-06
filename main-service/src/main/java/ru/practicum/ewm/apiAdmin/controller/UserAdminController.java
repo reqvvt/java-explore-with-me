@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.*;
 import ru.practicum.ewm.apiAdmin.service.UserAdminService;
 import ru.practicum.ewm.user.NewUserRequest;
 import ru.practicum.ewm.user.UserDto;
-import ru.practicum.ewm.user.UserService;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;

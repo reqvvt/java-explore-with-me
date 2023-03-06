@@ -14,21 +14,21 @@ import static ru.practicum.ewm.request.RequestStatus.PENDING;
 public interface RequestMapper {
 
     static ParticipationRequest toRequest(Event event, User requester) {
-        ParticipationRequest request = new ParticipationRequest();
-        request.setEvent(event);
-        request.setRequester(requester);
-        request.setCreated(LocalDateTime.now());
-        request.setStatus(event.getRequestModeration() ? PENDING : CONFIRMED);
-        return request;
+        return ParticipationRequest.builder()
+                                   .event(event)
+                                   .requester(requester)
+                                   .created(LocalDateTime.now())
+                                   .status(event.getRequestModeration() ? PENDING : CONFIRMED)
+                                   .build();
     }
 
     static ParticipationRequestDto toParticipationRequestDto(ParticipationRequest request) {
-        return new ParticipationRequestDto(
-                request.getId(),
-                toStringDateTime(request.getCreated()),
-                request.getEvent().getId(),
-                request.getRequester().getId(),
-                request.getStatus().toString()
-        );
+        return ParticipationRequestDto.builder()
+                                      .id(request.getId())
+                                      .created(toStringDateTime(request.getCreated()))
+                                      .event(request.getEvent().getId())
+                                      .requester(request.getRequester().getId())
+                                      .status(request.getStatus().toString())
+                                      .build();
     }
 }
