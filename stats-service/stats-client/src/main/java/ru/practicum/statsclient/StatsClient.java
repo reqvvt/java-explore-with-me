@@ -15,31 +15,27 @@ import java.util.Map;
 @Service
 public class StatsClient extends BaseClient {
     private static final String HIT_API_PREFIX = "/hit";
-    private static final String STAT_API_PREFIX = "/stats";
 
     @Autowired
-    public StatsClient(@Value("${stat-server.url}") String serverUrl, RestTemplateBuilder builder) {
-        super(
-                builder
-                        .uriTemplateHandler(new DefaultUriBuilderFactory(serverUrl))
-                        .requestFactory(HttpComponentsClientHttpRequestFactory::new)
-                        .build()
+    public StatsClient(@Value("${stats-service.url}") String serverUrl, RestTemplateBuilder builder) {
+        super(builder
+                .uriTemplateHandler(new DefaultUriBuilderFactory(serverUrl))
+                .requestFactory(HttpComponentsClientHttpRequestFactory::new)
+                .build()
         );
     }
 
-    public ResponseEntity<Object> saveHit(HitDto hitDto) {
+    public ResponseEntity<Object> save(HitDto hitDto) {
         return post(HIT_API_PREFIX, hitDto);
     }
 
-    public ResponseEntity<Object> getStat(String start,
-                                          String end,
-                                          List<String> uris,
-                                          Boolean unique) {
+    public ResponseEntity<Object> getStats(String start, String end, List<String> uris, Boolean unique) {
         Map<String, Object> parameters = Map.of(
                 "start", start,
                 "end", end,
                 "uris", uris,
-                "unique", unique);
-        return post(STAT_API_PREFIX, parameters);
+                "unique", unique
+        );
+        return get("/stats?start={start}&end={end}&uris={uris}&unique={unique}", null, parameters);
     }
 }

@@ -10,6 +10,7 @@ import javax.validation.constraints.NotBlank;
 @AllArgsConstructor
 @Builder
 public class HitDto {
+    private Long id;
     @NotBlank
     private String app;
     @NotBlank
