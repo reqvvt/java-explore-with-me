@@ -2,6 +2,7 @@ package ru.practicum.ewm.apiPrivate.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.ewm.comment.*;
 import ru.practicum.ewm.event.Event;
 import ru.practicum.ewm.event.EventRepository;
@@ -26,6 +27,7 @@ public class CommentPrivateServiceImpl implements CommentPrivateService {
     private final CommentMapper commentMapper;
 
     @Override
+    @Transactional
     public Collection<CommentDto> getAllByAuthorId(Long userId) {
         checkUserExists(userId);
         return commentRepository.findAllByAuthorId(userId).stream()
@@ -51,6 +53,7 @@ public class CommentPrivateServiceImpl implements CommentPrivateService {
     }
 
     @Override
+    @Transactional
     public CommentDto update(Long commentId, Long userId, NewCommentDto newCommentDto) {
         Comment comment = findCommentByIdAndAuthorId(commentId, userId);
 

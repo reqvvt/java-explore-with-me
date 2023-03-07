@@ -2,6 +2,7 @@ package ru.practicum.ewm.apiPublic.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.ewm.comment.CommentDto;
 import ru.practicum.ewm.comment.CommentMapper;
 import ru.practicum.ewm.comment.CommentRepository;
@@ -17,6 +18,7 @@ public class CommentPublicServiceImpl implements CommentPublicService {
     private final CommentMapper commentMapper;
 
     @Override
+    @Transactional
     public Collection<CommentDto> getAllByEventId(Long eventId) {
         return commentRepository.findAllByEventId(eventId).stream()
                                 .map(commentMapper::toCommentDto)
