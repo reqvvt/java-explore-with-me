@@ -25,15 +25,15 @@ public class CompilationPublicController {
     @GetMapping("/compilations")
     public ResponseEntity<Collection<CompilationDto>> getAll(
             @RequestParam(required = false) Boolean pinned) {
-        log.info("GET-request was received at '/compilations' . " +
-                "Get public information about all compilations with pinned = {}.", pinned);
+        log.info("GET-request was received at '/compilations' . Get public information about all compilations with " +
+                "pinned = {}.", pinned);
         return new ResponseEntity<>(service.getAll(pinned), HttpStatus.OK);
     }
 
     @GetMapping("/compilations/{compilationId}")
     public ResponseEntity<CompilationDto> getById(@PathVariable @Positive Long compilationId) {
-        log.info("GET-request was received at '/compilations/{}' . " +
-                "Get public information about the compilation with compilationId = {}.", compilationId, compilationId);
+        log.info("GET-request was received at '/compilations/{}' . Get public information about the compilation with " +
+                "compilationId = {}.", compilationId, compilationId);
         return new ResponseEntity<>(service.getById(compilationId), HttpStatus.OK);
     }
 }

@@ -30,7 +30,7 @@ public class UserAdminController {
             @RequestParam(defaultValue = "0", required = false) @PositiveOrZero Integer from,
             @RequestParam(defaultValue = "10", required = false) @Positive Integer size
     ) {
-        log.info("GET-request was received at 'admin/users?ids={}&from={}&size={}'. Get users.", ids, from, size);
+        log.info("GET-request was received at 'admin/users?ids={}&from={}&size={}'. Get all users.", ids, from, size);
         return new ResponseEntity<>(service.getAll(ids, from, size), HttpStatus.OK);
     }
 
