@@ -96,6 +96,7 @@ public class EventPrivateServiceImpl implements EventPrivateService {
     }
 
     @Override
+    @Transactional
     public List<ParticipationRequestDto> getRequestsByEventIdAndInitiatorId(Long eventId, Long userId) {
         getByIdAndInitiatorIdWithCheck(eventId, userId);
         Collection<ParticipationRequest> requests = requestRepository.findAllByEventId(eventId);
@@ -105,6 +106,7 @@ public class EventPrivateServiceImpl implements EventPrivateService {
     }
 
     @Override
+    @Transactional
     public EventRequestStatusUpdateResult updateRequestStatusByInitiator(Long eventId, Long userId, EventRequestStatusUpdateRequest request) {
         checkUserExists(userId);
 

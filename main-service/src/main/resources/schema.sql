@@ -20,11 +20,11 @@ CREATE TABLE IF NOT EXISTS categories (
 
 CREATE TABLE IF NOT EXISTS events (
     id                 BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY NOT NULL,
-    annotation         TEXT,
+    annotation         VARCHAR(2000),
     category_id        BIGINT REFERENCES categories (id),
     confirmed_requests INTEGER                                         NOT NULL,
     created_on         TIMESTAMP WITHOUT TIME ZONE                     NOT NULL,
-    description        TEXT                                            NOT NULL,
+    description        VARCHAR(7000)                                   NOT NULL,
     event_date         TIMESTAMP WITHOUT TIME ZONE                     NOT NULL,
     published_on       TIMESTAMP WITHOUT TIME ZONE,
     initiator_id       BIGINT REFERENCES users (id) ON DELETE CASCADE,
@@ -56,4 +56,13 @@ CREATE TABLE IF NOT EXISTS requests (
     event_id     BIGINT REFERENCES events (id),
     requester_id BIGINT REFERENCES users (id),
     status       VARCHAR(32)                                     NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS comments (
+
+    id        BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY NOT NULL,
+    text      VARCHAR(280)                                    NOT NULL,
+    author_id BIGINT REFERENCES users (id) ON DELETE CASCADE  NOT NULL,
+    event_id  BIGINT REFERENCES events (id) ON DELETE CASCADE NOT NULL,
+    created   TIMESTAMP WITHOUT TIME ZONE                     NOT NULL
 );
